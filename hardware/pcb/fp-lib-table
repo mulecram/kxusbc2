@@ -1,0 +1,10 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "2307727")(type "KiCad")(uri "${KIPRJMOD}/parts/2307727.pretty")(options "")(descr ""))
+  (lib (name "BQ25792RQMR")(type "KiCad")(uri "${KIPRJMOD}/parts/BQ25792RQMR")(options "")(descr ""))
+  (lib (name "SPM6530T-1R0M-HZ")(type "KiCad")(uri "${KIPRJMOD}/parts/SPM6530T-1R0M-HZ")(options "")(descr ""))
+  (lib (name "footprints")(type "KiCad")(uri "${KIPRJMOD}/parts/ul_GT-USB-7055A/KiCADv6/footprints.pretty")(options "")(descr ""))
+  (lib (name "LP5815DRLR")(type "KiCad")(uri "${KIPRJMOD}/parts/LP5815DRLR")(options "")(descr ""))
+  (lib (name "VSON-8_csd17581q3a")(type "KiCad")(uri "${KIPRJMOD}/parts/VSON-8_csd17581q3a/VSON-8_csd17581q3a.pretty")(options "")(descr ""))
+  (lib (name "RT9058-33GV")(type "KiCad")(uri "${KIPRJMOD}/parts/RT9058-33GV")(options "")(descr ""))
+)

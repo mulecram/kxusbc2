@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LP5815DRLR
+D LED Lighting Driver ICs 3-channel I2C interface RGB LED driver with instant blinking and auto animation control
+K
+F https://www.ti.com/lit/gpn/LP5815
+$ENDCMP
+#
+#End Doc Library
