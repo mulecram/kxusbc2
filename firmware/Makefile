@@ -4,7 +4,11 @@ MCU = attiny3226
 PROGRAMMER = serialupdi
 PORT = /dev/cu.usbserial-20120
 F_CPU = 20000000
-OBJDIR = build
+ifeq ($(DEBUG),1)
+OBJDIR = build/debug
+else
+OBJDIR = build/release
+endif
 DEPDIR = $(OBJDIR)/.deps
 
 # Compiler and tools
@@ -78,6 +82,17 @@ $(EEP): $(ELF)
 	$(OBJCOPY) -O ihex -j .eeprom $< $@
 
 flash: $(HEX)
+	@echo ""
+	@if [ "$(DEBUG)" = "1" ]; then \
+		echo "\033[1;35m╔════════════════════════════════════════╗\033[0m"; \
+		echo "\033[1;35m║  FLASHING: DEBUG BUILD                 ║\033[0m"; \
+		echo "\033[1;35m╚════════════════════════════════════════╝\033[0m"; \
+	else \
+		echo "\033[1;32m╔════════════════════════════════════════╗\033[0m"; \
+		echo "\033[1;32m║  FLASHING: RELEASE BUILD              ║\033[0m"; \
+		echo "\033[1;32m╚════════════════════════════════════════╝\033[0m"; \
+	fi
+	@echo ""
 	$(AVRDUDE) -c $(PROGRAMMER) -p $(MCU) -P $(PORT) -U flash:w:$<:i
 
 clean:
