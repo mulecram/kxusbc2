@@ -1,0 +1,150 @@
+diff -U 1 orig/PDPolicy.c patched/PDPolicy.c
+--- orig/PDPolicy.c	2022-02-14 11:21:56
++++ patched/PDPolicy.c	2025-11-26 20:36:49
+@@ -2587,5 +2587,5 @@
+      */
+-    FSC_S32 i, reqPos = 0;
+-    FSC_U32 objVoltage = 0;
+-    FSC_U32 objCurrent = 0, objPower, MaxPower = 0, SelVoltage = 0, ReqCurrent;
++    FSC_U8 i, reqPos = 0;
++    FSC_U16 objVoltage = 0, objCurrent = 0, SelVoltage = 0, ReqCurrent;
++    FSC_U32 objPower, MaxPower = 0;
+ 
+@@ -2624,3 +2624,3 @@
+                         port->SrcCapsReceived[i].FPDOSupply.MaxCurrent * 10;
+-                objPower = (objVoltage * objCurrent) / 1000;
++                objPower = ((FSC_U32)objVoltage * (FSC_U32)objCurrent) / 1000;
+             }
+@@ -4230,3 +4230,3 @@
+ FSC_U8 PolicySendData(Port_t *port, FSC_U8 MessageType, void* data,
+-                      FSC_U32 len, PolicyState_t nextState,
++                      FSC_U8 len, PolicyState_t nextState,
+                       FSC_U8 subIndex, SopType sop, FSC_BOOL extMsg)
+@@ -4234,3 +4234,3 @@
+     FSC_U8 Status = STAT_BUSY;
+-    FSC_U32 i;
++    FSC_U8 i;
+     FSC_U8* pData = (FSC_U8*)data;
+@@ -4402,3 +4402,3 @@
+ {
+-    FSC_U32 i;
++    FSC_U8 i;
+     sopMainHeader_t *capsHeaderRecieved;
+diff -U 1 orig/PDPolicy.h patched/PDPolicy.h
+--- orig/PDPolicy.h	2022-02-14 11:21:56
++++ patched/PDPolicy.h	2025-11-26 20:36:49
+@@ -111,3 +111,3 @@
+ FSC_U8 PolicySendData(Port_t *port, FSC_U8 MessageType, void* data,
+-                      FSC_U32 len, PolicyState_t nextState,
++                      FSC_U8 len, PolicyState_t nextState,
+                       FSC_U8 subIndex, SopType sop, FSC_BOOL extMsg);
+diff -U 1 orig/PDProtocol.c patched/PDProtocol.c
+--- orig/PDProtocol.c	2022-02-14 11:21:56
++++ patched/PDProtocol.c	2025-11-26 20:41:42
+@@ -679,3 +679,5 @@
+         port->Registers.Status.I_TXSENT = 0;
++#ifndef FSC_GSCE_FIX
+         port->Registers.Status.I_CRC_CHK = 0;
++#endif
+         ProtocolVerifyGoodCRC(port);
+diff -U 1 orig/PD_Types.h patched/PD_Types.h
+--- orig/PD_Types.h	2022-02-14 11:21:56
++++ patched/PD_Types.h	2025-11-26 21:21:25
+@@ -109,3 +109,3 @@
+ #define tNoResponse             5000    * TICK_SCALE_TO_MS
+-#define tSenderResponse         24      * TICK_SCALE_TO_MS
++#define tSenderResponse         32      * TICK_SCALE_TO_MS
+ #define tTypeCSendSourceCap     150     * TICK_SCALE_TO_MS
+diff -U 1 orig/core.c patched/core.c
+--- orig/core.c	2022-02-14 11:21:56
++++ patched/core.c	2025-11-26 20:36:49
+@@ -72,6 +72,6 @@
+  */
+-FSC_U32 core_get_next_timeout(Port_t *port)
++FSC_U16 core_get_next_timeout(Port_t *port)
+ {
+-  FSC_U32 time = 0;
+-  FSC_U32 nexttime = 0xFFFFFFFF;
++  FSC_U16 time = 0;
++  FSC_U16 nexttime = 0xFFFF;
+   FSC_U8 i;
+@@ -84,3 +84,3 @@
+ 
+-  if (nexttime == 0xFFFFFFFF) nexttime = 0;
++  if (nexttime == 0xFFFF) nexttime = 0;
+ 
+diff -U 1 orig/core.h patched/core.h
+--- orig/core.h	2022-02-14 11:21:56
++++ patched/core.h	2025-11-26 20:36:49
+@@ -73,3 +73,3 @@
+  */
+-FSC_U32 core_get_next_timeout(Port_t *port);
++FSC_U16 core_get_next_timeout(Port_t *port);
+ 
+diff -U 1 orig/dpm.c patched/dpm.c
+--- orig/dpm.c	2022-02-14 11:21:56
++++ patched/dpm.c	2025-11-26 20:36:49
+@@ -87,3 +87,3 @@
+     FSC_BOOL status = TRUE;
+-    FSC_U32 voltage = 0;
++    FSC_U16 voltage = 0;
+ 
+@@ -126,3 +126,3 @@
+     FSC_BOOL status = FALSE;
+-    FSC_U32 sourceVoltage = 0;
++    FSC_U16 sourceVoltage = 0;
+ 
+diff -U 1 orig/dpm.h patched/dpm.h
+--- orig/dpm.h	2022-02-14 11:21:56
++++ patched/dpm.h	2025-11-26 20:36:49
+@@ -44,3 +44,3 @@
+     FSC_BOOL        SinkUSBCommCapable;        /* USB communications capable */
+-    FSC_U32         SinkRequestMaxVoltage;     /* Sink Maximum voltage */
++    FSC_U16         SinkRequestMaxVoltage;     /* Sink Maximum voltage */
+     FSC_U32         SinkRequestMaxPower;       /* Sink Maximum power */
+diff -U 1 orig/timer.c patched/timer.c
+--- orig/timer.c	2022-02-14 11:21:56
++++ patched/timer.c	2025-11-26 20:36:49
+@@ -19,3 +19,3 @@
+ 
+-void TimerStart(struct TimerObj *obj, FSC_U32 time) {
++void TimerStart(struct TimerObj *obj, FSC_U16 time) {
+   /* Grab the current time stamp and store the wait period. */
+@@ -55,3 +55,3 @@
+       /* Elapsed time >= period? */
+-      result = ((FSC_U32)(platform_get_system_time() - obj->starttime_) >=
++      result = ((FSC_U16)(platform_get_system_time() - obj->starttime_) >=
+                obj->period_) ? TRUE : FALSE;
+@@ -69,5 +69,5 @@
+ 
+-FSC_U32 TimerRemaining(struct TimerObj *obj)
++FSC_U16 TimerRemaining(struct TimerObj *obj)
+ {
+-  FSC_U32 currenttime = platform_get_system_time();
++  FSC_U16 currenttime = platform_get_system_time();
+ 
+@@ -83,3 +83,3 @@
+   /* Timer hasn't expired, so this should return a valid time left. */
+-  return (FSC_U32)(obj->starttime_ + obj->period_ - currenttime);
++  return (FSC_U16)(obj->starttime_ + obj->period_ - currenttime);
+ }
+diff -U 1 orig/timer.h patched/timer.h
+--- orig/timer.h	2022-02-14 11:21:56
++++ patched/timer.h	2025-11-26 20:36:49
+@@ -27,4 +27,4 @@
+ struct TimerObj {
+-  FSC_U32 starttime_;           /* Time-stamp when timer started */
+-  FSC_U32 period_;              /* Timer period */
++  FSC_U16 starttime_;           /* Time-stamp when timer started */
++  FSC_U16 period_;              /* Timer period */
+   FSC_U8  disablecount_;        /* Auto-disable timers if they keep getting
+@@ -43,3 +43,3 @@
+  */
+-void TimerStart(struct TimerObj *obj, FSC_U32 time);
++void TimerStart(struct TimerObj *obj, FSC_U16 time);
+ 
+@@ -77,3 +77,3 @@
+  */
+-FSC_U32 TimerRemaining(struct TimerObj *obj);
++FSC_U16 TimerRemaining(struct TimerObj *obj);
+ 

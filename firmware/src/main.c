@@ -1,0 +1,150 @@
+#include <avr/io.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <util/delay.h>
+#include <stdio.h>
+#include <avr/interrupt.h>
+#include <avr/sleep.h>
+
+#include "debug.h"
+#include "clock.h"
+#include "util.h"
+#include "sysconfig.h"
+#include "rtc.h"
+#include "led.h"
+#include "bq.h"
+#include "button.h"
+#include "twi.h"
+#include "fsc_pd_ctl.h"
+#include "charging.h"
+#include "insomnia.h"
+#include "kx2.h"
+
+#ifdef DEBUG
+static void bq_print_status(void);
+
+ISR(BADISR_vect) {
+    debug_printf("Bad interrupt\n");
+}
+#endif
+
+int main(void) {
+    clock_init();
+    sysconfig_read();
+    debug_init();
+    kx2_init();
+    rtc_init();
+    button_init();
+    twi_init();
+    //led_init();
+    
+    debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
+    
+    if (!bq_init()) {
+        debug_printf("BQ init failed\n");
+    }
+    bq_set_charge_voltage_limit(sysconfig.maxChargeVoltage);
+    bq_set_charge_current_limit(sysconfig.chargeCurrentLimit);
+    bq_set_thermistor(sysconfig.enableThermistor);
+
+    fsc_pd_init();
+    button_set_short_press_handler(fsc_pd_swap_roles);
+
+    // Enable global interrupts (used for RTC/SPI)
+    sei();
+
+    ConnectionState lastConnState = 0;
+    PolicyState_t lastPolicyState = 0;
+#ifdef DEBUG
+    uint16_t last_bq_status = 0;
+#endif
+    while (1) {
+        if (debug_read_char() == 's') {
+            fsc_pd_swap_roles();
+        }
+
+        // Call PD state machine
+        uint16_t next_timeout = fsc_pd_run();
+
+        if (fsc_pd_get_connection_state() != lastConnState) {
+            debug_printf("ConnState: %d\n", fsc_pd_get_connection_state());
+            lastConnState = fsc_pd_get_connection_state();
+        }
+        if (fsc_pd_get_policy_state() != lastPolicyState) {
+            debug_printf("PolicyState: %d\n", fsc_pd_get_policy_state());
+            lastPolicyState = fsc_pd_get_policy_state();
+        }
+
+        charging_check_timer();
+
+        if (bq_process_interrupts()) {
+            charging_run(false);
+        }
+
+        // Enter low-power mode until next RTC alarm or other interrupt
+        if (next_timeout > 0) {
+            if (next_timeout < 100) {
+                // Avoid too short sleep intervals
+                continue;
+            }
+            rtc_set_alarm(next_timeout);
+        }
+
+        // Only enter sleep mode if no insomnia mask bits are set;
+        // use recommended procedure from avr/sleep.h to avoid race conditions
+        set_sleep_mode(SLEEP_MODE_STANDBY);
+        cli();
+        if (insomnia_mask == 0) {
+            sleep_enable();
+            sei();
+            sleep_cpu();
+            sleep_disable();
+        }
+        sei();
+
+#ifdef DEBUG
+        uint16_t now = rtc_get_ticks();
+        if ((now - last_bq_status) >= 1000) {
+            bq_print_status();
+
+            last_bq_status = now;
+        }
+#endif
+    }
+
+    return 0;
+}
+
+#ifdef DEBUG
+static void bq_print_status(void) {
+    uint16_t vbus = bq_measure_vbus();
+    int16_t ibus = bq_measure_ibus();
+    uint16_t vbat = bq_measure_vbat();
+    int16_t ibat = bq_measure_ibat();
+
+    // Calculate input/output power and efficiency without using floating point arithmetic
+    int32_t pin = ((int32_t)vbus * (int32_t)ibus) / 1000;  // mW
+    int32_t pout = ((int32_t)vbat * (int32_t)ibat) / 1000; // mW
+    if (fsc_pd_get_connection_state() == AttachedSource) {
+        // OTG mode, discharging battery. pin/pout will be negative and swapped
+        int32_t temp = -pin;
+        pin = -pout;
+        pout = temp;
+    }
+    uint32_t eff = 0;
+    if (pin != 0 && pout != 0) {
+        eff = pout * 1000 / pin; // 0..1000
+    }
+    debug_printf("BQ Status: %d\n", bq_get_charge_status());
+    debug_printf("Vbus: %u mV, Ibus: %d mA, limit: %u mV / %u mA\n", vbus, ibus, bq_get_input_voltage_limit(), bq_get_input_current_limit());
+    debug_printf("Vbat: %u mV, Ibat: %d mA\n", vbat, ibat);
+    debug_printf("Pin: %ld mW, Pout: %ld mW, eff = %lu.%lu%%\n", pin, pout, eff / 10, eff % 10);
+    if (bq_get_fault_status() != 0) {
+        debug_printf("BQ Fault detected: %x\n", bq_get_fault_status());
+    }
+    if (bq_get_temperature_status() != 0) {
+        debug_printf("BQ Temperature warning: %x\n", bq_get_temperature_status());
+    }
+    debug_printf("MCU temperature: %d C\n\n", measure_chip_temperature());
+}
+#endif
