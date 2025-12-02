@@ -54,3 +54,171 @@ The RTC emulation also features a temperature compensation. Once a minute, it me
 
 ## Input priority
 The charger uses either the external DC jack input (E pad), or USB, whichever is connected first. If both sources are connected when the charger starts up, it prefers the DC jack. The charger keeps using the current source as long as it is available, even if another source becomes available. However, if the current source disconnects, the charger switches. For example, if you connect a DC supply while the charger is charging from USB, it will keep using USB. If you then disconnect USB, it will seamlessly switch over to the DC jack input.
+
+
+## Connection states
+
+Enum values used by the FSC PD reference code, listed for convenience here to aid in debugging.
+
+| Enum Value            | Number |
+|:----------------------|--------|
+| Disabled              | 0      |
+| ErrorRecovery         | 1      |
+| **Unattached**            | 2      |
+| AttachWaitSink        | 3      |
+| **AttachedSink**          | 4      |
+| AttachWaitSource      | 5      |
+| **AttachedSource**        | 6      |
+| TrySource             | 7      |
+| TryWaitSink           | 8      |
+| TrySink               | 9      |
+| TryWaitSource         | 10     |
+| AudioAccessory        | 11     |
+| DebugAccessorySource  | 12     |
+| AttachWaitAccessory   | 13     |
+| PoweredAccessory      | 14     |
+| UnsupportedAccessory  | 15     |
+| DelayUnattached       | 16     |
+| UnattachedSource      | 17     |
+| DebugAccessorySink    | 18     |
+| AttachWaitDebSink     | 19     |
+| AttachedDebSink       | 20     |
+| AttachWaitDebSource   | 21     |
+| AttachedDebSource     | 22     |
+| TryDebSource          | 23     |
+| TryWaitDebSink        | 24     |
+| UnattachedDebSource   | 25     |
+| IllegalCable          | 26     |
+| UnattachedSourceOnly  | 27     |
+
+
+## PD policy states
+
+Enum values used by the FSC PD reference code, listed for convenience here to aid in debugging.
+
+| Enum Value                      | Number |
+|:--------------------------------|--------|
+| peDisabled                      | 0      |
+| peErrorRecovery                 | 1      |
+| peSourceHardReset               | 2      |
+| peSourceSendHardReset           | 3      |
+| peSourceSoftReset               | 4      |
+| peSourceSendSoftReset           | 5      |
+| peSourceStartup                 | 6      |
+| peSourceSendCaps                | 7      |
+| peSourceDiscovery               | 8      |
+| peSourceDisabled                | 9      |
+| peSourceTransitionDefault       | 10     |
+| peSourceNegotiateCap            | 11     |
+| peSourceCapabilityResponse      | 12     |
+| peSourceWaitNewCapabilities     | 13     |
+| peSourceTransitionSupply        | 14     |
+| **peSourceReady**                   | 15     |
+| peSourceGiveSourceCaps          | 16     |
+| peSourceGetSinkCaps             | 17     |
+| peSourceSendPing                | 18     |
+| peSourceGotoMin                 | 19     |
+| peSourceGiveSinkCaps            | 20     |
+| peSourceGetSourceCaps           | 21     |
+| peSourceSendDRSwap              | 22     |
+| peSourceEvaluateDRSwap          | 23     |
+| peSourceAlertReceived           | 24     |
+| peSinkHardReset                 | 25     |
+| peSinkSendHardReset             | 26     |
+| peSinkSoftReset                 | 27     |
+| peSinkSendSoftReset             | 28     |
+| peSinkTransitionDefault         | 29     |
+| peSinkStartup                   | 30     |
+| peSinkDiscovery                 | 31     |
+| peSinkWaitCaps                  | 32     |
+| peSinkEvaluateCaps              | 33     |
+| peSinkSelectCapability          | 34     |
+| peSinkTransitionSink            | 35     |
+| **peSinkReady**                     | 36     |
+| peSinkGiveSinkCap               | 37     |
+| peSinkGetSourceCap              | 38     |
+| peSinkGetSinkCap                | 39     |
+| peSinkGiveSourceCap             | 40     |
+| peSinkSendDRSwap                | 41     |
+| peSinkAlertReceived             | 42     |
+| peSinkEvaluateDRSwap            | 43     |
+| peSourceSendVCONNSwap           | 44     |
+| peSourceEvaluateVCONNSwap       | 45     |
+| peSinkSendVCONNSwap             | 46     |
+| peSinkEvaluateVCONNSwap         | 47     |
+| peSourceSendPRSwap              | 48     |
+| peSourceEvaluatePRSwap          | 49     |
+| peSinkSendPRSwap                | 50     |
+| peSinkEvaluatePRSwap            | 51     |
+| peGetCountryCodes               | 52     |
+| peGiveCountryCodes              | 53     |
+| peNotSupported                  | 54     |
+| peGetPPSStatus                  | 55     |
+| peGivePPSStatus                 | 56     |
+| peGiveCountryInfo               | 57     |
+| peGiveVdm                       | 58     |
+| peUfpVdmGetIdentity             | 59     |
+| peUfpVdmSendIdentity            | 60     |
+| peUfpVdmGetSvids                | 61     |
+| peUfpVdmSendSvids               | 62     |
+| peUfpVdmGetModes                | 63     |
+| peUfpVdmSendModes               | 64     |
+| peUfpVdmEvaluateModeEntry       | 65     |
+| peUfpVdmModeEntryNak            | 66     |
+| peUfpVdmModeEntryAck            | 67     |
+| peUfpVdmModeExit                | 68     |
+| peUfpVdmModeExitNak             | 69     |
+| peUfpVdmModeExitAck             | 70     |
+| peUfpVdmAttentionRequest        | 71     |
+| peDfpUfpVdmIdentityRequest      | 72     |
+| peDfpUfpVdmIdentityAcked        | 73     |
+| peDfpUfpVdmIdentityNaked        | 74     |
+| peDfpCblVdmIdentityRequest      | 75     |
+| peDfpCblVdmIdentityAcked        | 76     |
+| peDfpCblVdmIdentityNaked        | 77     |
+| peDfpVdmSvidsRequest            | 78     |
+| peDfpVdmSvidsAcked              | 79     |
+| peDfpVdmSvidsNaked              | 80     |
+| peDfpVdmModesRequest            | 81     |
+| peDfpVdmModesAcked              | 82     |
+| peDfpVdmModesNaked              | 83     |
+| peDfpVdmModeEntryRequest        | 84     |
+| peDfpVdmModeEntryAcked          | 85     |
+| peDfpVdmModeEntryNaked          | 86     |
+| peDfpVdmModeExitRequest         | 87     |
+| peDfpVdmExitModeAcked           | 88     |
+| peSrcVdmIdentityRequest         | 89     |
+| peSrcVdmIdentityAcked           | 90     |
+| peSrcVdmIdentityNaked           | 91     |
+| peDfpVdmAttentionRequest        | 92     |
+| peCblReady                      | 93     |
+| peCblGetIdentity                | 94     |
+| peCblGetIdentityNak             | 95     |
+| peCblSendIdentity               | 96     |
+| peCblGetSvids                   | 97     |
+| peCblGetSvidsNak                | 98     |
+| peCblSendSvids                  | 99     |
+| peCblGetModes                   | 100    |
+| peCblGetModesNak                | 101    |
+| peCblSendModes                  | 102    |
+| peCblEvaluateModeEntry          | 103    |
+| peCblModeEntryAck               | 104    |
+| peCblModeEntryNak               | 105    |
+| peCblModeExit                   | 106    |
+| peCblModeExitAck                | 107    |
+| peCblModeExitNak                | 108    |
+| peDpRequestStatus               | 109    |
+| peDpRequestStatusAck            | 110    |
+| peDpRequestStatusNak            | 111    |
+| peDpRequestConfig               | 112    |
+| peDpRequestConfigAck            | 113    |
+| peDpRequestConfigNak            | 114    |
+| PE_BIST_Receive_Mode            | 115    |
+| PE_BIST_Frame_Received          | 116    |
+| PE_BIST_Carrier_Mode_2          | 117    |
+| PE_BIST_Test_Data               | 118    |
+| dbgGetRxPacket                  | 119    |
+| dbgSendTxPacket                 | 120    |
+| peSendCableReset                | 121    |
+| peSendGenericCommand            | 122    |
+| peSendGenericData               | 123    |
