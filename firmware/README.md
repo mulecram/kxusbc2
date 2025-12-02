@@ -7,7 +7,8 @@ Prerequisites:
 * AVR-GCC toolchain (version 15.2.0)
 * AVRDUDE (for programming)
 
-Build instructions:
+
+## Build instructions
 
 1. Download release v4.1.2 of the FUSB302 reference code from onsemi (login required): https://www.onsemi.com/design/evaluation-board/FUSB302BGEVB
 2. Place the downloaded file `FUSB302 REFERENCE CODE.ZIP` in the root directory of the repository.
@@ -18,6 +19,22 @@ Build instructions:
 7. `make eeprom` to write the default sysconfig settings to the EEPROM.
 
 `DEBUG` should be set to 0 for release builds, otherwise standby consumption will increase (periodic debug status output, charger ADC active for measurements etc.).
+
+### Recommended fuse settings
+
+* BOD level: 2.6 V
+* Sample frequency: 1 kHz
+* BOD mode in active: sampled
+* BOD mode in sleep: sampled
+
+#### AVRDUDE config
+
+```
+config bodsleep=bod_sampled
+config bodactive=bod_sampled
+config bodsampfreq=bod_1khz
+config bodlevel=bod_2v6
+```
 
 
 ## USB PD support
@@ -47,16 +64,16 @@ There is also a serial interface on a separate 3-pin header (also staggered), wi
 ## Configuration
 The following settings can be set in the EEPROM (see also the definitions in https://github.com/manuelkasper/kxusbc2/blob/main/firmware/src/sysconfig.h):
 
-| Byte offset | Description | Type | Default |
+| Byte offset | Description | Type | Default |
 |:------------|:------------|:-----|:--------|
 | 0 | Role | Enum<ul><li>0: SRC</li><li>1: SNK</li><li>2: DRP</li><li>3: TRY_SRC</li><li>4: TRY_SNK</li></ul> | 2: DRP
 | 1 | PD mode | Enum<ul><li>0: Off</li><li>1: PD 2.0</li><li>2: PD 3.0</li></ul> | 2: PD 3.0
 | 2 | Charge current limit (mA, max. current into battery) | `uint16` | 3000
-| 4 | Charge end voltage (mV, termination voltage for CV phase) | `uint16` | 12600
-| 6 | DC input current limit (mA, from DC jack) | `uint16` | 3000
+| 4 | Charge end voltage (mV, termination voltage for CV phase) | `uint16` | 12600
+| 6 | DC input current limit (mA, from DC jack) | `uint16` | 3000
 | 8 | OTG current limit (mA, output to USB) | `uint16` | 3000
-| 10 | Allow charging while rig is on | `bool` | 0
-| 11 | Enable thermistor | `bool` | 0
+| 10 | Allow charging while rig is on | `bool` | 0
+| 11 | Enable thermistor | `bool` | 0
 | 12 | RTC offset (ppm, -127..127) | `int8` | 0
 
 
@@ -76,7 +93,7 @@ The charger uses either the external DC jack input (E pad), or USB, whichever is
 
 ## Connection states
 
-Enum values used by the FSC PD reference code, listed for convenience here to aid in debugging.
+Enum values used by the FSC PD reference code, listed here for convenience to aid in debugging.
 
 | Enum Value            | Number |
 |:----------------------|--------|
