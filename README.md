@@ -73,7 +73,7 @@ The firmware is working, with PD 3.0 compatibility tested with various sources (
 
 ### Disclaimer
 
-You are using the KXUSBC2 at your own risk; I won't take responsibility if your KX2, phone, charger, battery, etc. get fried due to this board, or if you unexpectedly end up with an empty battery. You might lose your warranty on the KX2 by using this board.
+You are using the KXUSBC2 at your own risk; I won't take responsibility if your KX2, phone, charger, battery, etc. get fried due to this board, your house burns down, or if you unexpectedly end up with an empty battery. You might lose your warranty on the KX2 by using this board.
 
 ### License
 
