@@ -2691,6 +2691,18 @@
 			(embedded_fonts no)
 		)
 	)
+	(rectangle
+		(start 242.57 130.81)
+		(end 242.57 130.81)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid a9c67522-1ddb-4b4c-b8e0-c95133775718)
+	)
 	(text "I2C addresses:\n0x22: FUSB302B\n0x2D: LP5815\n0x6B: BQ25792"
 		(exclude_from_sim no)
 		(at 25.654 169.926 0)
@@ -2823,7 +2835,27 @@
 	)
 	(wire
 		(pts
-			(xy 198.12 153.67) (xy 208.28 153.67)
+			(xy 208.28 148.59) (xy 205.74 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "06f6821c-5dae-4a91-971e-b9f3ad57dd1e")
+	)
+	(wire
+		(pts
+			(xy 205.74 147.32) (xy 194.31 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0c01fe46-6169-4ddc-82cf-294922001234")
+	)
+	(wire
+		(pts
+			(xy 203.2 153.67) (xy 208.28 153.67)
 		)
 		(stroke
 			(width 0)
@@ -2893,7 +2925,7 @@
 	)
 	(wire
 		(pts
-			(xy 194.31 149.86) (xy 198.12 149.86)
+			(xy 194.31 149.86) (xy 203.2 149.86)
 		)
 		(stroke
 			(width 0)
@@ -2970,16 +3002,6 @@
 			(type default)
 		)
 		(uuid "2c85cc80-98f8-45b1-8aef-8f0d895582d4")
-	)
-	(wire
-		(pts
-			(xy 200.66 148.59) (xy 208.28 148.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3485f5b2-a899-4f34-b681-bbda0e300512")
 	)
 	(wire
 		(pts
@@ -3133,16 +3155,6 @@
 	)
 	(wire
 		(pts
-			(xy 194.31 147.32) (xy 200.66 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6e98dd50-7b59-425f-bc71-165f10a815dc")
-	)
-	(wire
-		(pts
 			(xy 128.27 45.72) (xy 130.81 45.72)
 		)
 		(stroke
@@ -3193,16 +3205,6 @@
 	)
 	(wire
 		(pts
-			(xy 194.31 152.4) (xy 200.66 152.4)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7e71fb3b-e4b0-4ca8-a5fd-fd840b495e02")
-	)
-	(wire
-		(pts
 			(xy 146.05 97.79) (xy 152.4 97.79)
 		)
 		(stroke
@@ -3210,6 +3212,16 @@
 			(type default)
 		)
 		(uuid "7edc3cc0-7270-42bc-b5a2-6bcfa39f245e")
+	)
+	(wire
+		(pts
+			(xy 200.66 143.51) (xy 208.28 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "823d218b-ad22-49cd-a665-62210b3ee80f")
 	)
 	(wire
 		(pts
@@ -3263,13 +3275,13 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 152.4) (xy 200.66 148.59)
+			(xy 205.74 148.59) (xy 205.74 147.32)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "8ed33dc3-e2e8-412f-bde4-07a8350a173c")
+		(uuid "9357e507-0fde-49f5-829d-995feb5a4826")
 	)
 	(wire
 		(pts
@@ -3303,7 +3315,7 @@
 	)
 	(wire
 		(pts
-			(xy 198.12 149.86) (xy 198.12 153.67)
+			(xy 203.2 149.86) (xy 203.2 153.67)
 		)
 		(stroke
 			(width 0)
@@ -3533,6 +3545,16 @@
 	)
 	(wire
 		(pts
+			(xy 200.66 152.4) (xy 200.66 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cc41f2cf-1d08-4af7-8893-e49a0be0911d")
+	)
+	(wire
+		(pts
 			(xy 149.86 106.68) (xy 149.86 109.22)
 		)
 		(stroke
@@ -3590,16 +3612,6 @@
 			(type default)
 		)
 		(uuid "d8f525f9-a575-4c25-8e6f-58b2b667cfa9")
-	)
-	(wire
-		(pts
-			(xy 200.66 143.51) (xy 208.28 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d9928c65-3755-4771-8160-adc0b01774cb")
 	)
 	(wire
 		(pts
@@ -3673,6 +3685,16 @@
 	)
 	(wire
 		(pts
+			(xy 194.31 152.4) (xy 200.66 152.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e8d060bd-ccd9-4478-b193-56b2f6ba0266")
+	)
+	(wire
+		(pts
 			(xy 152.4 161.29) (xy 160.02 161.29)
 		)
 		(stroke
@@ -3740,16 +3762,6 @@
 			(type default)
 		)
 		(uuid "f8e01845-48b8-469c-91f5-fe54f104263e")
-	)
-	(wire
-		(pts
-			(xy 200.66 147.32) (xy 200.66 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f8f7c2b5-0d16-4684-acf2-c4e077f29c5f")
 	)
 	(wire
 		(pts
@@ -6559,7 +6571,7 @@
 				)
 			)
 		)
-		(property "Value" "APFA3010LSEEZGKQBKC"
+		(property "Value" "LTST-C19HE1WT-H"
 			(at 213.36 137.9798 0)
 			(effects
 				(font
@@ -6567,7 +6579,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_Kingbright_APFA3010_3x1.5mm_Horizontal"
+		(property "Footprint" "LED_SMD:LED_LiteOn_LTST-C19HE1WT"
 			(at 213.36 135.89 0)
 			(effects
 				(font
@@ -6594,7 +6606,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C5278712"
+		(property "LCSC" "C427425"
 			(at 213.36 148.59 0)
 			(effects
 				(font
