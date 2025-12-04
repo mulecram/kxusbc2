@@ -10797,7 +10797,7 @@
 				)
 			)
 		)
-		(property "Value" "GT-USB-7055A"
+		(property "Value" "GT-USB-7055AB"
 			(at 0 0.0043 180)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -10833,7 +10833,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2829973"
+		(property "LCSC" "C22383826"
 			(at 0 0 0)
 			(layer "F.SilkS")
 			(hide yes)

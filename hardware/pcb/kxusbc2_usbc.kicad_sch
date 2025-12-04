@@ -2442,7 +2442,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "GT-USB-7055A"
+		(property "Value" "GT-USB-7055AB"
 			(at 116.078 68.7264 0)
 			(effects
 				(font
@@ -2478,7 +2478,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C2829973"
+		(property "LCSC" "C22383826"
 			(at 127 67.31 0)
 			(effects
 				(font
