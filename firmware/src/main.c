@@ -55,6 +55,7 @@ int main(void) {
 
     ConnectionState lastConnState = 0;
     PolicyState_t lastPolicyState = 0;
+    bool last_kx2_on_state = kx2_is_on();
 #ifdef DEBUG
     uint16_t last_bq_status = 0;
 #endif
@@ -77,9 +78,10 @@ int main(void) {
 
         charging_check_timer();
 
-        if (bq_process_interrupts()) {
+        if (bq_process_interrupts() || last_kx2_on_state != kx2_is_on()) {
             charging_run(false);
         }
+        last_kx2_on_state = kx2_is_on();
 
         // Enter low-power mode until next RTC alarm or other interrupt
         if (next_timeout > 0) {
@@ -145,6 +147,6 @@ static void bq_print_status(void) {
     if (bq_get_temperature_status() != 0) {
         debug_printf("BQ Temperature warning: %x\n", bq_get_temperature_status());
     }
-    debug_printf("MCU temperature: %d C\n\n", measure_chip_temperature());
+    debug_printf("KX2 power state: %s\n", kx2_is_on() ? "ON" : "OFF");
 }
 #endif

@@ -2,6 +2,7 @@
 #include "sysconfig.h"
 #include "debug.h"
 #include "bq.h"
+#include "kx2.h"
 #include "fsc_pd_ctl.h"
 #include "fsc_pd/timer.h"
 
@@ -14,10 +15,15 @@ void charging_run(bool pd_timer_expired) {
     // Check if we have an input on VAC2 (DC jack), which takes priority
     if (bq_get_ac2_present()) {
         // DC jack input present - set fixed input current limit and enable charging
-        debug_printf("DC jack input present - setting fixed input current limit\n");
+        debug_printf("DC jack input present\n");
         bq_set_acdrv(false, true);
         bq_set_input_current_limit(sysconfig.dcInputCurrentLimit);
-        bq_enable_charging();
+        if (kx2_is_on() && !sysconfig.chargeWhenRigIsOn) {
+            debug_printf("Rig is ON - disabling charging\n");
+            bq_disable_charging();
+        } else {
+            bq_enable_charging();
+        }
         // TODO: what if we are in OTG mode?
         return;
     }

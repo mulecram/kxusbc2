@@ -53,8 +53,7 @@ static int uart_putchar(char c, FILE *stream) {
 #endif
 
 #ifdef DEBUG
-void debug_printf(const char *fmt, ...)
-{
+void debug_printf(const char *fmt, ...) {
     uint8_t h, m, s;
     uint16_t ms;
     va_list args;
@@ -65,8 +64,7 @@ void debug_printf(const char *fmt, ...)
     va_end(args);
 }
 #else
-void debug_printf(const char *fmt, ...)
-{
+void debug_printf(const char *fmt, ...) {
     (void)fmt;
 }
 #endif

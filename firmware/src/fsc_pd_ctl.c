@@ -14,7 +14,6 @@ FSC_U8 PD_Specification_Revision;
 static void fsc_pd_event_handler(FSC_U32 event, FSC_U8 portId, void *usr_ctx, void *app_ctx);
 
 void fsc_pd_init(void) {
-    debug_printf("Role: %d, PD Mode: %d\n", sysconfig.role, sysconfig.pdMode);
     PD_Specification_Revision = sysconfig.pdMode == PD_3_0 ? 2 : 1;
     port.PortID = 0;
     core_initialize(&port, FUSB302_I2C_ADDR);

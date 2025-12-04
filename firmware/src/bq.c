@@ -174,11 +174,11 @@ bool bq_process_interrupts(void) {
 }
 
 bool bq_disable_charging(void) {
-    return bq_set_register_bit(0x0F, 0x20, false);
+    return bq_set_register_bit(0x0F, 0x20, false);  // EN_CHG = 0
 }
 
 bool bq_enable_charging(void) {
-    return bq_set_register_bit(0x0F, 0x20, true);
+    return bq_set_register_bit(0x0F, 0x20, true);  // EN_CHG = 1
 }
 
 bool bq_enable_bc12_detection(void) {
