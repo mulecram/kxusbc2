@@ -17,10 +17,13 @@ Prerequisites:
 5. `make` to compile the code.
 6. `make flash` to flash the AVR.
 7. `make eeprom` to write the default sysconfig settings to the EEPROM.
+8. `make fuses` to program the fuses.
 
 `DEBUG` should be set to 0 for release builds, otherwise standby consumption will increase (periodic debug status output, charger ADC active for measurements etc.).
 
 ### Recommended fuse settings
+
+The following settings are applied with `make fuses`:
 
 * BOD level: 2.6 V
 * Sample frequency: 1 kHz

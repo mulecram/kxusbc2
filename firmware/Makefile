@@ -54,12 +54,15 @@ LDFLAGS += -Wl,-u,vfprintf -lprintf_min
 endif
 
 # Targets
-.PHONY: all clean flash eeprom
+.PHONY: all clean flash eeprom fuses
 
 all: $(HEX)
 
 eeprom: $(EEP)
 	$(AVRDUDE) -c $(PROGRAMMER) -p $(MCU) -P $(PORT) -U eeprom:w:$<:i
+
+fuses:
+	$(AVRDUDE) -c $(PROGRAMMER) -p $(MCU) -P $(PORT) -U fuses:w:fuses.hex:i
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR) $(DEPDIR)
