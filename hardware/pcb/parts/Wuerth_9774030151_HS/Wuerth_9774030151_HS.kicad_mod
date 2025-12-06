@@ -1,0 +1,115 @@
+(footprint "Wuerth_9774030151_HS"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "Mounting Hardware, inside through hole M2.5, height 3, Wuerth electronics 9774030151 (https://www.we-online.com/components/products/datasheet/9774030151R.pdf), generated with kicad-footprint-generator")
+	(tags "Mounting M2.5 9774030151")
+	(property "Reference" "REF**"
+		(at 0 -3.95 0)
+		(layer "F.SilkS")
+		(uuid "7a430898-d214-4f29-920b-f8966cf8a303")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Mounting_Wuerth_WA-SMSI-M2.5_H3mm_9774030151_HandSolder"
+		(at 0 3.95 0)
+		(layer "F.Fab")
+		(uuid "f9bf8670-5184-415f-a297-c5f235c7dc40")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ba4a44ee-e32e-485e-b30a-85d295ffe718")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "with solder pad on bottom for hand soldering"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6585f208-a424-4e0e-8aaa-d867e499a414")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(zone_connect 2)
+	(attr smd allow_soldermask_bridges)
+	(fp_circle
+		(center 0 0)
+		(end 3.25 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "92fa8b94-60cb-4462-907c-18df93c209e3")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 2.55 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "9ae71b5f-0418-4666-af79-918b459e5112")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "4232be36-4009-40f3-891f-b63883671363")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 5 5)
+		(drill 3.7)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "234fd9e2-b55f-42d1-bc4c-e88253c44ca5")
+	)
+	(pad "1" smd circle
+		(at 0 0)
+		(size 6 6)
+		(layers "F.Cu" "F.Mask")
+		(uuid "5120ab46-b753-4cdd-b2bd-2740c965bc39")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/parts/Wuerth_9774030151_HS/9774030151R.stp"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

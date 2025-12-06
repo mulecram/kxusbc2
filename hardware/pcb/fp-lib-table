@@ -8,4 +8,5 @@
   (lib (name "RT9058-33GV")(type "KiCad")(uri "${KIPRJMOD}/parts/RT9058-33GV")(options "")(descr ""))
   (lib (name "DESD5V0U1BL-7B")(type "KiCad")(uri "${KIPRJMOD}/parts/DESD5V0U1BL-7B")(options "")(descr ""))
   (lib (name "VSON-8_TI_CSD")(type "KiCad")(uri "${KIPRJMOD}/parts/VSON-8_TI_CSD")(options "")(descr ""))
+  (lib (name "Wuerth_9774030151_HS")(type "KiCad")(uri "${KIPRJMOD}/parts/Wuerth_9774030151_HS")(options "")(descr ""))
 )
