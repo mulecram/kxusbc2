@@ -125,7 +125,6 @@ int main(void) {
     return 0;
 }
 
-#ifdef DEBUG
 static void bq_print_status(void) {
     uint16_t vbus = bq_measure_vbus();
     int16_t ibus = bq_measure_ibus();
@@ -151,5 +150,7 @@ static void bq_print_status(void) {
     if (bq_get_temperature_status() != 0) {
         debug_printf("BQ Temperature warning: %x\n", bq_get_temperature_status());
     }
+    debug_printf("BQ temperature: %d.%d C\n", bq_measure_temperature() / 2, (bq_measure_temperature() % 2) * 5);
+    debug_printf("BQ thermistor: %u\n", bq_measure_thermistor());
 }
-#endif
+

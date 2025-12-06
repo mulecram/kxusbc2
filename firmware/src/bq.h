@@ -63,3 +63,5 @@ uint16_t bq_measure_vbat(void);
 int16_t bq_measure_ibat(void);
 uint16_t bq_get_fault_status(void);
 uint8_t bq_get_temperature_status(void);
+int16_t bq_measure_temperature(void);
+uint16_t bq_measure_thermistor(void);

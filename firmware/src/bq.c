@@ -350,3 +350,15 @@ uint16_t bq_get_fault_status(void) {
 uint8_t bq_get_temperature_status(void) {
     return bq_read_register(0x1F) & 0x0F;
 }
+
+int16_t bq_measure_temperature(void) {
+    // Measure chip die temperature (TDIE)
+    // Temperature is in steps of 0.5 degrees Celsius
+    return bq_read_register16(0x41);
+}
+
+uint16_t bq_measure_thermistor(void) {
+    // Measure thermistor, returns relative reading (0..1023 corresponding to 0..100%)
+    uint16_t thermistor_reading = bq_read_register16(0x3F);
+    return thermistor_reading;
+}
