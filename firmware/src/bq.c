@@ -214,9 +214,6 @@ bool bq_enable_otg(uint16_t votg) {
     // Set EN_OTG
     success &= bq_set_register_bit(0x12, 0x40, true);
 
-    // Set EN_ACDRV1 (we only output OTG via USB, not via DC jack)
-    success &= bq_set_register_bit(0x13, 0x40, true);
-
     // Apple (legacy/Lightning): apply 2.7 V to D+ and D- (2.4 A)
     //success &= bq_write_register(0x47, 0xB4);
 

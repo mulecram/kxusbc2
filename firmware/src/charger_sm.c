@@ -58,7 +58,7 @@ bool charger_sm_init(void) {
 void charger_sm_on_bq_interrupt(void) {
     // BQ interrupt will be detected by state machine checking hardware status
     // No action needed here - state machine queries BQ directly
-    debug_printf("SM: BQ interrupt received\n");
+    //debug_printf("SM: BQ interrupt received\n");
 }
 
 void charger_sm_on_pd_state_change(void) {
@@ -71,7 +71,7 @@ void charger_sm_on_kx2_state_change(bool rig_on) {
     // KX2 state will be detected by state machine checking kx2_is_on()
     // No action needed here - state machine queries kx2 directly
     (void)rig_on;
-    debug_printf("SM: KX2 state change\n");
+    //debug_printf("SM: KX2 state change\n");
 }
 
 void charger_sm_on_pps_voltage_update(uint16_t mv) {
@@ -85,7 +85,20 @@ void charger_sm_on_pps_voltage_update(uint16_t mv) {
     // When PPS voltage is set to non-zero, PD has negotiated OTG mode
     // Configure BQ and transition to DISCHARGING state
     if (mv > 0) {
+        // If there is an input voltage on VAC2 (DC jack), we cannot enter OTG mode.
+        // The charger IC seems to have a restriction, and no matter what we do with
+        // EN_ACDRV1/2 and DIS_ACDRV, OTG mode will not start as long as there is an
+        // input voltage on VAC2. The datasheet is not clear on this point, but this
+        // forum post by a TI employee seems to confirm it:
+        // https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1546390/bq25792-otg-use-case#pifragment-323297-paged-content
+        // However, if OTG is already active and the DC jack is then plugged in,
+        // OTG will continue to function normally.
+        if (bq_get_ac2_present()) {
+            debug_printf("SM: Cannot enter OTG mode while DC jack is connected\n");
+            return;
+        }
         bq_disable_charging();
+        bq_set_acdrv(true, false);
         bq_enable_otg(mv);
         set_state(CHARGER_DISCHARGING);
     } else {
@@ -313,7 +326,6 @@ static void enter_usb_pd_charging(void) {
     uint16_t adv_current = fsc_pd_get_advertised_current();
     
     bq_disable_bc12_detection();
-    bq_set_acdrv(true, false);
     bq_set_input_current_limit(adv_current);
     bq_enable_charging();
 }
