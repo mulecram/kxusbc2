@@ -37,6 +37,9 @@ int main(void) {
     button_init();
     twi_init();
     led_init();
+
+    // Enable global interrupts (also used for serial debug output)
+    sei();
     
     debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
     
@@ -57,9 +60,6 @@ int main(void) {
         led_set_color(0, 0, 0);
         _delay_ms(200);
     }
-
-    // Enable global interrupts (used for RTC/SPI)
-    sei();
 
     ConnectionState lastConnState = 0;
     PolicyState_t lastPolicyState = 0;
