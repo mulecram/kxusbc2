@@ -34,6 +34,10 @@ void platform_set_vbus_lvl_enable(FSC_U8 port,
 
 void platform_set_vbus_discharge(FSC_U8 port, FSC_BOOL enable) {
     debug_printf("Set VBUS discharge: %u\n", enable);
+    if (enable) {
+        // Ensure OTG mode is off
+        bq_disable_otg();
+    }
     bq_set_vbus_discharge(enable);
 }
 
