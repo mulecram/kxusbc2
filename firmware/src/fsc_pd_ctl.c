@@ -1,7 +1,7 @@
 #include "fsc_pd_ctl.h"
 #include "vendor_info.h"
 #include "sysconfig.h"
-#include "charging.h"
+#include "charger_sm.h"
 #include "insomnia.h"
 #include "debug.h"
 
@@ -111,8 +111,6 @@ void fsc_pd_swap_roles(void) {
 static void fsc_pd_event_handler(FSC_U32 event, FSC_U8 portId, void *usr_ctx, void *app_ctx) {
     //debug_printf("Event: %lu\n", event);
     if (event == PD_STATE_CHANGED || event == PD_NO_CONTRACT) {
-        //debug_printf("PD state changed\n");
-
-        charging_run(false);
+        charger_sm_on_pd_state_change();
     }
 }

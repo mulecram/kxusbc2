@@ -45,11 +45,7 @@ void platform_set_vbus_lvl_enable(FSC_U8 port, VBUS_LVL level, FSC_BOOL enable,
 
 void platform_set_pps_voltage(FSC_U8 port, FSC_U16 mv);
 
-FSC_U16 platform_get_pps_voltage(FSC_U8 port);
-
 void platform_set_pps_current(FSC_U8 port, FSC_U16 ma);
-
-FSC_U16 platform_get_pps_current(FSC_U8 port);
 
 void platform_set_vbus_discharge(FSC_U8 port, FSC_BOOL enable);
 

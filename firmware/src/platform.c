@@ -4,8 +4,7 @@
 #include "twi.h"
 #include "bq.h"
 #include "fsc_pd_ctl.h"
-#include "sysconfig.h"
-#include "led.h"
+#include "charger_sm.h"
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -33,7 +32,7 @@ void platform_set_vbus_lvl_enable(FSC_U8 port,
 }
 
 void platform_set_vbus_discharge(FSC_U8 port, FSC_BOOL enable) {
-    debug_printf("Set VBUS discharge: %u\n", enable);
+    //debug_printf("Set VBUS discharge: %u\n", enable);
     if (enable) {
         // Ensure OTG mode is off
         bq_disable_otg();
@@ -73,43 +72,18 @@ void platform_delay_10us(FSC_U8 delayCount) {
     }
 }
 
-static FSC_U16 otg_voltage = 0;
-static FSC_U16 otg_current = 0;
 void platform_set_pps_voltage(FSC_U8 port, FSC_U16 mv) {
-    // mv is in 20 mV increments!
+    // mv is in 20 mV increments, convert to mV
     mv *= 20;
     debug_printf("Set PPS voltage: %u mV\n", mv);
-    if (otg_voltage == mv) {
-        return;
-    }
-    if (mv > 0) {
-        bq_enable_otg(mv);
-        led_set_color(0, 128, 0);
-    } else {
-        bq_disable_otg();
-        led_set_color(0, 0, 0);
-    }
-    otg_voltage = mv;
-}
-
-FSC_U16 platform_get_pps_voltage(FSC_U8 port) {
-    return otg_voltage;
+    // Delegate all OTG voltage management to state machine
+    charger_sm_on_pps_voltage_update(mv);
 }
 
 void platform_set_pps_current(FSC_U8 port, FSC_U16 ma) {
     debug_printf("Set PPS current: %u mA\n", ma);
-    if (ma > sysconfig.otgCurrentLimit) {
-        ma = sysconfig.otgCurrentLimit;
-    }
-    if (otg_current == ma) {
-        return;
-    }
-    bq_set_otg_current_limit(ma);
-    otg_current = ma;
-}
-
-FSC_U16 platform_get_pps_current(FSC_U8 port) {
-    return otg_current;
+    // Delegate all OTG current management to state machine
+    charger_sm_on_pps_current_update(ma);
 }
 
 FSC_U16 platform_get_system_time(void) {

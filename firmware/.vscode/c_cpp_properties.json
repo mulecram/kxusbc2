@@ -1,0 +1,37 @@
+{
+  "configurations": [
+    {
+      "name": "macos-gcc-x86",
+      "intelliSenseMode": "macos-gcc-x86",
+      "compilerPath": "/opt/homebrew/opt/avr-gcc@15/bin/avr-gcc",
+      "cStandard": "gnu99",
+      "cppStandard": "${default}",
+      "compilerArgs": [
+        "-g",
+        "-Os",
+        "-Wall",
+        "-Wextra",
+        "-fpermissive",
+        "-fno-exceptions",
+        "-fno-threadsafe-statics",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-pipe",
+        "-mmcu=attiny3226",
+        "-DF_CPU=20000000UL",
+        "-DDEBUG",
+        "-DRTC_TEMPERATURE_COMPENSATION",
+        "-DFSC_HAVE_SRC",
+        "-DFSC_HAVE_SNK",
+        "-DFSC_HAVE_DRP",
+        "-DFSC_HAVE_PPS_SOURCE",
+        "-DFSC_GSCE_FIX",
+        "-Isrc"
+      ],
+      "includePath": [
+        "${workspaceFolder}/**"
+      ]
+    }
+  ],
+  "version": 4
+}

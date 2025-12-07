@@ -16,13 +16,17 @@
 #include "button.h"
 #include "twi.h"
 #include "fsc_pd_ctl.h"
-#include "charging.h"
+#include "charger_sm.h"
 #include "insomnia.h"
 #include "kx2.h"
 
-#ifdef DEBUG
-static void bq_print_status(void);
+//#define DEBUG_STATUS
 
+#ifdef DEBUG_STATUS
+static void bq_print_status(void);
+#endif
+
+#ifdef DEBUG
 ISR(BADISR_vect) {
     //debug_printf("Bad interrupt\n");
 }
@@ -41,7 +45,7 @@ int main(void) {
     // Enable global interrupts (also used for serial debug output)
     sei();
     
-    debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
+    //debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
     
     if (!bq_init()) {
         debug_printf("BQ init failed\n");
@@ -51,6 +55,7 @@ int main(void) {
     bq_set_thermistor(sysconfig.enableThermistor);
 
     fsc_pd_init();
+    charger_sm_init();
     button_set_short_press_handler(fsc_pd_swap_roles);
 
     // Power up blink
@@ -61,10 +66,8 @@ int main(void) {
         _delay_ms(200);
     }
 
-    ConnectionState lastConnState = 0;
-    PolicyState_t lastPolicyState = 0;
     bool last_kx2_on_state = kx2_is_on();
-#ifdef DEBUG
+#ifdef DEBUG_STATUS
     uint16_t last_bq_status = 0;
 #endif
     while (1) {
@@ -72,24 +75,28 @@ int main(void) {
             fsc_pd_swap_roles();
         }
 
-        // Call PD state machine
+        // Run PD state machine - returns a timeout in ticks until next required wakeup,
+        // or 0 if no wakeup is needed and we can sleep until the next interrupt
         uint16_t next_timeout = fsc_pd_run();
 
-        if (fsc_pd_get_connection_state() != lastConnState) {
-            debug_printf("ConnState: %d\n", fsc_pd_get_connection_state());
-            lastConnState = fsc_pd_get_connection_state();
-        }
-        if (fsc_pd_get_policy_state() != lastPolicyState) {
-            debug_printf("PolicyState: %d\n", fsc_pd_get_policy_state());
-            lastPolicyState = fsc_pd_get_policy_state();
+        // Process BQ interrupts and notify state machine
+        if (bq_process_interrupts()) {
+            charger_sm_on_bq_interrupt();
         }
 
-        charging_check_timer();
-
-        if (bq_process_interrupts() || last_kx2_on_state != kx2_is_on()) {
-            charging_run(false);
+        // Detect KX2 state changes and notify state machine
+        bool curr_kx2_state = kx2_is_on();
+        if (curr_kx2_state != last_kx2_on_state) {
+            charger_sm_on_kx2_state_change(curr_kx2_state);
+            last_kx2_on_state = curr_kx2_state;
         }
-        last_kx2_on_state = kx2_is_on();
+
+        // Run charger state machine - returns a timeout in ticks until the next required wakeup,
+        // or 0 if no wakeup is needed and we can sleep until the next interrupt
+        uint16_t sm_timeout = charger_sm_run();
+        if (sm_timeout > 0 && (sm_timeout < next_timeout || next_timeout == 0)) {
+            next_timeout = sm_timeout;
+        }
 
         // Enter low-power mode until next RTC alarm or other interrupt
         if (next_timeout > 0) {
@@ -112,7 +119,7 @@ int main(void) {
         }
         sei();
 
-#ifdef DEBUG
+#ifdef DEBUG_STATUS
         uint16_t now = rtc_get_ticks();
         if ((now - last_bq_status) >= 1000) {
             bq_print_status();
@@ -125,6 +132,7 @@ int main(void) {
     return 0;
 }
 
+#ifdef DEBUG_STATUS
 static void bq_print_status(void) {
     uint16_t vbus = bq_measure_vbus();
     int16_t ibus = bq_measure_ibus();
@@ -144,13 +152,7 @@ static void bq_print_status(void) {
     debug_printf("Vbus: %u mV, Ibus: %d mA, limit: %u mV / %u mA\n", vbus, ibus, bq_get_input_voltage_limit(), bq_get_input_current_limit());
     debug_printf("Vbat: %u mV, Ibat: %d mA\n", vbat, ibat);
     debug_printf("Pin: %ld mW, Pout: %ld mW\n", pin, pout);
-    if (bq_get_fault_status() != 0) {
-        debug_printf("BQ Fault detected: %x\n", bq_get_fault_status());
-    }
-    if (bq_get_temperature_status() != 0) {
-        debug_printf("BQ Temperature warning: %x\n", bq_get_temperature_status());
-    }
     debug_printf("BQ temperature: %d.%d C\n", bq_measure_temperature() / 2, (bq_measure_temperature() % 2) * 5);
     debug_printf("BQ thermistor: %u\n", bq_measure_thermistor());
 }
-
+#endif

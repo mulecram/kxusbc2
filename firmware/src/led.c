@@ -37,6 +37,7 @@ void led_init(void) {
 }
 
 void led_set_color(uint8_t red, uint8_t green, uint8_t blue) {
+    led_stop_blinking();
     led_write_register(0x18, green);
     led_write_register(0x19, blue);
     led_write_register(0x1A, red);
@@ -78,10 +79,10 @@ void led_set_blinking(bool red, bool green, bool blue, uint8_t pwm, uint8_t t_on
     // Set ENGINE0 infinite repeat
     led_write_register(0x0C, 0x03);
 
-    // PATTERN0_PAUSE_TIME: no pause
+    // PATTERN0_PAUSE_TIME
     led_write_register(0x1C, pause);
 
-    // PATTERN0_REPEAT_TIME infinite repeats
+    // PATTERN0_REPEAT_TIME
     led_write_register(0x1D, count);
 
     // PATTERN0_PWM0..4

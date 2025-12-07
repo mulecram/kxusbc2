@@ -128,21 +128,25 @@ bool bq_init(void) {
 
     // REG18: NTC temperature thresholds: defaults
 
-    // REG28: Charger Mask 0: enable AC2_PRESENT interrupt
-    success &= bq_write_register(0x28, 0xFB);
+    // REG28: Charger Mask 0: enable AC1/AC2_PRESENT interrupt
+    success &= bq_write_register(0x28, 0xF9);
 
-    // REG28: Charger Mask 1: enable CHG interrupt
+    // REG29: Charger Mask 1: enable CHG interrupt
     success &= bq_write_register(0x29, 0x7F);
 
-    // REG28: Charger Mask 2: disable all interrupts
+    // REG2A: Charger Mask 2: disable all interrupts
     success &= bq_write_register(0x2A, 0x7F);
 
-    // REG28: Charger Mask 3: disable all interrupts
-    success &= bq_write_register(0x2A, 0x7F);
+    // REG2B: Charger Mask 3: enable temperature interrupts
+    success &= bq_write_register(0x2B, 0x10);
 
+    // REG2C: Fault Mask 0: defaults (all interrupts on)
+
+    // REG2D: Fault Mask 1: defaults (all interrupts on)
+
+#ifdef DEBUG
     // Enable ADC, continuous mode, 15 bit resolution
     // Disable for production (uses around 500 uA)
-#ifdef DEBUG
     success &= bq_write_register(0x2E, 0x80);
 #endif
 
@@ -164,9 +168,14 @@ bool bq_process_interrupts(void) {
     }
     bq_interrupt_pending = false;
     
-    uint8_t charger_status_0 = bq_read_register(0x22);
-    if (charger_status_0 & 0x04) {
-        // AC2_PRESENT changed
+    uint8_t charger_flag_0 = bq_read_register(0x22);
+    if (charger_flag_0 & 0x06) {
+        // AC1/AC2_PRESENT changed
+        return true;
+    }
+    uint8_t charger_flag_3 = bq_read_register(0x25);
+    if (charger_flag_3 & 0x0F) {
+        // TS temperature crossed
         return true;
     }
 
