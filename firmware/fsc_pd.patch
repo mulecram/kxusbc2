@@ -55,6 +55,11 @@ diff -U 1 orig/PD_Types.h patched/PD_Types.h
 -#define tSenderResponse         24      * TICK_SCALE_TO_MS
 +#define tSenderResponse         32      * TICK_SCALE_TO_MS
  #define tTypeCSendSourceCap     150     * TICK_SCALE_TO_MS
+@@ -125,3 +125,3 @@
+ #define tSrcRecoverMax          1000    * TICK_SCALE_TO_MS
+-#define tGoodCRCDelay           5       * TICK_SCALE_TO_MS
++#define tGoodCRCDelay           20      * TICK_SCALE_TO_MS
+ #define t5To12VTransition       8       * TICK_SCALE_TO_MS
 diff -U 1 orig/core.c patched/core.c
 --- orig/core.c	2022-02-14 11:21:56
 +++ patched/core.c	2025-11-26 20:36:49
