@@ -19,6 +19,7 @@
 #include "charger_sm.h"
 #include "insomnia.h"
 #include "kx2.h"
+#include "watchdog.h"
 
 //#define DEBUG_STATUS
 
@@ -34,6 +35,7 @@ ISR(BADISR_vect) {
 
 int main(void) {
     clock_init();
+    watchdog_init();
     sysconfig_read();
     debug_init();
     kx2_init();
@@ -45,7 +47,8 @@ int main(void) {
     // Enable global interrupts (also used for serial debug output)
     sei();
     
-    //debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
+    debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
+    RSTCTRL.RSTFR = 0xFF; // Clear reset flags
     
     if (!bq_init()) {
         debug_printf("BQ init failed\n");
@@ -123,6 +126,10 @@ int main(void) {
             last_bq_status = now;
         }
 #endif
+
+        // Tickle the watchdog. Note that we get at least one interrupt per second due to the RTC PIT.
+        // If the latter is disabled, one must make sure to set the RTC alarm at less than the watchdog timeout interval.
+        watchdog_tickle();
     }
 
     return 0;

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 void fsc_pd_init(void);
+bool fsc_pd_test_connection(void);
 uint16_t fsc_pd_run(void);
 void fsc_pd_notify_interrupt(void);
 void fsc_pd_enable_interrupt(void);

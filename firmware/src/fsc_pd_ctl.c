@@ -3,6 +3,7 @@
 #include "sysconfig.h"
 #include "charger_sm.h"
 #include "insomnia.h"
+#include "twi.h"
 #include "debug.h"
 
 #define FUSB302_I2C_ADDR 0x22
@@ -55,6 +56,16 @@ void fsc_pd_init(void) {
 
     // FUSB_INT pin
     PORTA.PIN5CTRL = PORT_ISC_LEVEL_gc | PORT_PULLUPEN_bm;
+}
+
+bool fsc_pd_test_connection(void) {
+    uint8_t device_id;
+    if (twi_send_and_read_bytes(FUSB302_I2C_ADDR, 0x01, &device_id, 1)) {
+        if ((device_id & 0x8C) == 0x80) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Run the state machine. Returns the number of ticks until the next required wakeup, or 0

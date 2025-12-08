@@ -37,6 +37,7 @@ typedef enum {
 } TemperatureStatus;
 
 bool bq_init(void);
+bool bq_test_connection(void);
 void bq_notify_interrupt(void);
 bool bq_process_interrupts(void);
 bool bq_enable_charging(void);

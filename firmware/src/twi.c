@@ -11,20 +11,13 @@
 #define TWI_IS_ARBLOST() TWI0.MSTATUS & TWI_ARBLOST_bm
 #define CLIENT_NACK() TWI0.MSTATUS & TWI_RXACK_bm
 #define TWI_IS_BUSBUSY() ((TWI0.MSTATUS & TWI_BUSSTATE_BUSY_gc) == TWI_BUSSTATE_BUSY_gc)
+#define TWI_IS_BAD() (((TWI0.MSTATUS & (TWI_RXACK_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm)) != 0) || (TWI_IS_BUSBUSY()))
 #define TWI_WAIT() while (!((TWI_IS_CLOCKHELD()) || (TWI_IS_BUSERR()) || (TWI_IS_ARBLOST()) || (TWI_IS_BUSBUSY())))
 #define TWI_STOP() {TWI0.MCTRLB |= TWI_MCMD_STOP_gc; while ((TWI0.MSTATUS & TWI_BUSSTATE_gm) != TWI_BUSSTATE_IDLE_gc); }
 
-static bool twi_is_bad(void);
 static bool twi_start(uint8_t addr, bool read);
 static void twi_read_from(uint8_t* data, uint8_t len);
 static bool twi_write_to(uint8_t* data, uint8_t len);
-
-static bool twi_is_bad(void) {
-    if (((TWI0.MSTATUS & (TWI_RXACK_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm)) != 0) || (TWI_IS_BUSBUSY())) {
-        return true;
-    }
-    return false;
-}
 
 void twi_init(void) {        
     // Configure pins for output
@@ -40,7 +33,7 @@ void twi_init(void) {
     // Set for 400kHz from a 20MHz oscillator, no CLKDIV
     TWI0.MBAUD = 20;
    
-    // No ISRs, host mode
+    // No ISRs, host mode, timeout after 200 us
     TWI0.MCTRLA = TWI_ENABLE_bm | TWI_TIMEOUT_200US_gc;
 }
 
@@ -54,7 +47,7 @@ static bool twi_start(uint8_t addr, bool read) {
     
     TWI_WAIT();
                 
-    if (twi_is_bad()){
+    if (TWI_IS_BAD()){
         TWI_STOP();
         return false;
     }
@@ -184,7 +177,7 @@ bool twi_send_and_read_bytes(uint8_t addr, uint8_t regAddress, uint8_t* data, ui
     
     TWI_WAIT();
     
-    if (twi_is_bad()) {
+    if (TWI_IS_BAD()) {
         //Stop the TWI Bus if an error occurred
         TWI0.MCTRLB = TWI_MCMD_STOP_gc;
         return false;

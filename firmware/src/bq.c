@@ -156,6 +156,14 @@ bool bq_init(void) {
     return success;
 }
 
+bool bq_test_connection(void) {
+    uint8_t part_info = bq_read_register(0x48);
+    if (bq_read_error || (part_info & 0x3F) != 0x08) {
+        return false;
+    }
+    return true;
+}
+
 void bq_notify_interrupt(void) {
     // We can't perform an I2C write here, as we're being called from an ISR.
     // If we did, we might interfere with another ongoing I2C transaction.
