@@ -101,6 +101,11 @@ void charger_sm_on_pps_voltage_update(uint16_t mv) {
         }
         bq_disable_charging();
         bq_set_acdrv(true, false);
+        if (otg_current == 0) {
+            // No current limit set yet - use configured default
+            otg_current = sysconfig.otgCurrentLimit;
+            bq_set_otg_current_limit(otg_current);
+        }
         bq_enable_otg(mv);
         set_state(CHARGER_DISCHARGING);
     } else {

@@ -58,6 +58,7 @@ uint16_t bq_get_charge_voltage(void);
 uint16_t bq_get_charge_current_limit(void);
 uint16_t bq_get_input_voltage_limit(void);
 uint16_t bq_get_input_current_limit(void);
+uint16_t bq_get_otg_current_limit(void);
 ChargeStatus bq_get_charge_status(void);
 VbusStatus bq_get_vbus_status(void);
 bool bq_get_vbat_present(void);

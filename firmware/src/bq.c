@@ -302,6 +302,10 @@ uint16_t bq_get_input_current_limit(void) {
     return bq_read_register16(0x06) * 10;
 }
 
+uint16_t bq_get_otg_current_limit(void) {
+    return bq_read_register(0x0D) * 40;
+}
+
 ChargeStatus bq_get_charge_status(void) {
     uint8_t chg_status_1 = bq_read_register(0x1C);
     return (chg_status_1 >> 5) & 0x07;
