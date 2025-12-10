@@ -53,11 +53,11 @@ int main(void) {
     debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
     RSTCTRL.RSTFR = 0xFF; // Clear reset flags
     
-    if (!bq_init()) {
+    if (!bq_init(sysconfig.chargingVoltageLimit, sysconfig.chargingCurrentLimit)) {
         debug_printf("BQ init failed\n");
+        led_set_blinking(true, false, false, 255, 5, 5, 3, 11);  // Red blinking, 3 x at 2 Hz with 1 second pause
+        while (1);
     }
-    bq_set_charge_voltage_limit(sysconfig.maxChargeVoltage);
-    bq_set_charge_current_limit(sysconfig.chargeCurrentLimit);
     bq_set_thermistor(sysconfig.enableThermistor);
 
     fsc_pd_init();

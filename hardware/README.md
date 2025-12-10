@@ -54,6 +54,15 @@ The PCB trace resistance between the “B” pad on the RF PCB and the central p
 The ground connection is via a single header pin rated for 2 A only. However, the standoffs with which the board is mounted to the side panel are grounded too. The coating/anodizing of the side panel should be stripped on the backside around the mounting holes, and along the bottom part where it meets other metal case parts (like the original side panel). This will provide a low-impedance ground connection through the side panel. Mounted this way, the resistance between the GND pad near the top edge of the backside of the KXUSBC2 PCB and the shaft of the battery DC plug was measured to be around 10 mΩ (4T/Kelvin measurement).
 
 
+## Supported battery types
+
+The charger has been designed for 3S Li-Ion batteries with a charging voltage of 12.6 V and a capacity of around 3000 mAh. The charging/discharging current limits can be changed in the EEPROM if smaller or larger batteries are used. Always use batteries with built-in protection and balancing circuits.
+
+### Using 4S LiFePO₄ batteries
+
+It is also possible to use 4S LiFePO₄ batteries. The charging voltage limit needs to be adjusted in the EEPROM. It is recommended to stay a bit below the limit enforced by the battery's protection circuit. Otherwise, when this voltage is reached during charging, the BMS may react by disconnecting the battery, causing the charging voltage to overshoot. This will manifest itself in a fault condition (red blinking LED), as the charger will detect an over voltage event. Usually 14.2 V is a good upper limit (e.g. some EREMIT batteries cut off at 14.2 V or even slightly below that).
+
+
 ## RTC
 
 Some people like to use the clock provided by the KXIO2/KXIBC2 options for logging. The RTC chip that Elecraft uses (PCF2123) is obsolete, and the successors use a different register mapping that would require modifications to the KX2 firmware. As the MCU has spare capacity, I opted to use its internal RTC instead, emulating the few SPI commands that the KX2 uses to read/write the time in firmware. The RTC is clocked by a 32.768 kHz crystal, and the microcontroller consumes extremely little power for keeping the clock running.

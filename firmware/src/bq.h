@@ -36,7 +36,7 @@ typedef enum {
     TEMP_COLD = 0x8
 } TemperatureStatus;
 
-bool bq_init(void);
+bool bq_init(uint16_t charging_voltage_limit, uint16_t charging_current_limit);
 bool bq_test_connection(void);
 void bq_notify_interrupt(void);
 bool bq_process_interrupts(void);
@@ -47,15 +47,11 @@ bool bq_disable_bc12_detection(void);
 bool bq_enable_otg(uint16_t votg);
 bool bq_disable_otg(void);
 bool bq_set_acdrv(bool enable_acdrv1, bool enable_acdrv2);
-bool bq_set_charge_voltage_limit(uint16_t charge_voltage_limit);
-bool bq_set_charge_current_limit(uint16_t charge_current_limit);
 bool bq_set_otg_current_limit(uint16_t ma);
 bool bq_set_input_current_limit(uint16_t ma);
 bool bq_set_vbus_discharge(bool discharge);
 bool bq_set_thermistor(bool enable);
 
-uint16_t bq_get_charge_voltage(void);
-uint16_t bq_get_charge_current_limit(void);
 uint16_t bq_get_input_voltage_limit(void);
 uint16_t bq_get_input_current_limit(void);
 uint16_t bq_get_otg_current_limit(void);

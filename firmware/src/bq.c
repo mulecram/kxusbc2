@@ -52,7 +52,7 @@ static bool bq_set_register_bit(uint8_t reg, uint8_t bitmask, bool set) {
     return bq_write_register(reg, value);
 }
 
-bool bq_init(void) {
+bool bq_init(uint16_t charging_voltage_limit, uint16_t charging_current_limit) {
     bool success = true;
 
     // Configure BQ_INT pin
@@ -72,14 +72,25 @@ bool bq_init(void) {
 
     // Set up registers according to our needs. The comments below only reflect deviations from the POR defaults.
 
+    // REG0A (set first as it will reset the registers below): Cell count
+    uint8_t cell = 3;
+    if (charging_voltage_limit >= 14000 && charging_voltage_limit <= 18800) {
+        // Must set CELL = 4 for voltages above 14 V
+        cell = 4;
+    } else if (charging_voltage_limit < 10000) {
+        // Not supported
+        return false;
+    }
+    success &= bq_write_register(0x0A, (cell - 1) << 6 | 0x23);
+
     // REG00: Minimal system voltage (VSYSMIN): 9 V
     success &= bq_write_register(0x00, 0x1A);
 
-    // REG01: Charge voltage limit (VREG): 12.6 V (Li-ion 3S)
-    success &= bq_write_register16(0x01, 0x04EC);
+    // REG01: Charge voltage limit (VREG)
+    success &= bq_write_register16(0x01, charging_voltage_limit / 10);
 
-    // REG03: Charge current limit (ICHG): 3 A
-    success &= bq_write_register16(0x03, 0x012C);
+    // REG03: Charge current limit (ICHG)
+    success &= bq_write_register16(0x03, charging_current_limit / 10);
 
     // REG05: Input voltage limit (VINDPM) determined automatically from VBUS upon plugin
     
@@ -89,8 +100,6 @@ bool bq_init(void) {
     success &= bq_write_register(0x08, 0x85);
 
     // REG09: Termination current (ITERM) is set to default 200 mA (above, along with defaults reset)
-
-    // REG0A: Cell count, recharge deglitch time and recharge threshold offset are left at defaults
 
     // REG0B: OTG mode regulation voltage (VOTG) is set during operation as negotiated
 
@@ -267,16 +276,6 @@ bool bq_set_input_current_limit(uint16_t ma) {
     return bq_write_register16(0x06, ma / 10);
 }
 
-bool bq_set_charge_voltage_limit(uint16_t charge_voltage_limit) {
-    // REG01: Charge voltage limit (VREG)
-    return bq_write_register16(0x01, charge_voltage_limit / 10);
-}
-
-bool bq_set_charge_current_limit(uint16_t charge_current_limit) {
-    // REG03: Charge current limit (ICHG)
-    return bq_write_register16(0x03, charge_current_limit / 10);
-}
-
 bool bq_set_vbus_discharge(bool discharge) {
     // Enable both VBUS and VAC1 pull down resistors
     return bq_set_register_bit(0x16, 0x0C, discharge);
@@ -284,14 +283,6 @@ bool bq_set_vbus_discharge(bool discharge) {
 
 bool bq_set_thermistor(bool enable) {
     return bq_set_register_bit(0x18, 0x01, !enable);
-}
-
-uint16_t bq_get_charge_voltage(void) {
-    return bq_read_register16(0x01) * 10;
-}
-
-uint16_t bq_get_charge_current_limit(void) {
-    return bq_read_register16(0x03) * 10;
 }
 
 uint16_t bq_get_input_voltage_limit(void) {

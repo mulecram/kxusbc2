@@ -5,8 +5,8 @@
 static EEMEM struct SysConfig sysconfig_eeprom = {
     .role = DRP,
     .pdMode = PD_3_0,
-    .chargeCurrentLimit = 3000,
-    .maxChargeVoltage = 12600,
+    .chargingCurrentLimit = 3000,
+    .chargingVoltageLimit = 14000,
     .dcInputCurrentLimit = 3000,
     .otgCurrentLimit = 3000,
     .chargeWhenRigIsOn = false,

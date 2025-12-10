@@ -20,9 +20,9 @@ enum PDMode {
 struct SysConfig {
     enum Role role;
     enum PDMode pdMode;
-    uint16_t chargeCurrentLimit;    // mA, range 50-5000
-    uint16_t maxChargeVoltage;      // mV, range 10000-13990
-    uint16_t dcInputCurrentLimit;   // mA, input from DC jack (VAC2)
+    uint16_t chargingCurrentLimit;  // mA, range 50-5000
+    uint16_t chargingVoltageLimit;  // mV, range 10000-18800
+    uint16_t dcInputCurrentLimit;   // mA, input from DC jack (VAC2), range 100-3300
     uint16_t otgCurrentLimit;       // mA, in OTG mode, range 120-3320
     bool chargeWhenRigIsOn;
     bool enableThermistor;

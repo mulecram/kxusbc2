@@ -70,17 +70,17 @@ There is also a serial interface on a separate 3-pin header (also staggered), wi
 
 The following settings can be set in the EEPROM (see also the definitions in https://github.com/manuelkasper/kxusbc2/blob/main/firmware/src/sysconfig.h):
 
-| Byte offset | Description | Type | Default |
-|:------------|:------------|:-----|:--------|
+| Byte offset | Description | Type | Default | Range |
+|:------------|:------------|:-----|:--------|:------|
 | 0 | Role | Enum<ul><li>0: SRC</li><li>1: SNK</li><li>2: DRP</li><li>3: TRY_SRC</li><li>4: TRY_SNK</li></ul> | 2: DRP
 | 1 | PD mode | Enum<ul><li>0: Off</li><li>1: PD 2.0</li><li>2: PD 3.0</li></ul> | 2: PD 3.0
-| 2 | Charge current limit (mA, max. current into battery) | `uint16` | 3000
-| 4 | Charge end voltage (mV, termination voltage for CV phase) | `uint16` | 12600
-| 6 | DC input current limit (mA, from DC jack) | `uint16` | 3000
-| 8 | OTG current limit (mA, output to USB) | `uint16` | 3000
+| 2 | Charging current limit (mA, max. current into battery) | `uint16` | 3000 | 50…5000
+| 4 | Charging voltage limit (mV, termination voltage for CV phase) | `uint16` | 12600 | 10000…18800
+| 6 | DC input current limit (mA, from DC jack) | `uint16` | 3000 | 100…3300
+| 8 | OTG current limit (mA, output to USB) | `uint16` | 3000 | 120…3320
 | 10 | Allow charging while rig is on | `bool` | 0
 | 11 | Enable thermistor | `bool` | 0
-| 12 | RTC offset (ppm, -127..127) | `int8` | 0
+| 12 | RTC offset (ppm, -127..127) | `int8` | 0 | -127…127
 
 
 ## RTC emulation
@@ -109,6 +109,7 @@ The charger uses either the external DC jack input (E pad), or USB, whichever is
 | Charged | green | steady
 | Temperature too high/low | red | steady
 | Fault (over-voltage/current, short circuit etc.) | red | blinking 5 Hz
+| Fault (initialisation) | red | 3 x blinking at 2 Hz, followed by 1 s pause
 | Rig on (charging inhibited) | magenta | steady
 | Discharging (OTG) | blue / cyan (*) | “breathing” speed depending on discharge current
 
