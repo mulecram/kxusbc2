@@ -24,11 +24,11 @@ struct SysConfig {
     uint16_t chargingVoltageLimit;    // mV, range 10000-18800
     uint16_t dcInputCurrentLimit;     // mA, input from DC jack (VAC2), range 100-3300
     uint16_t otgCurrentLimit;         // mA, in OTG mode, range 120-3320
+    uint16_t dischargingVoltageLimit; // mV, min. battery voltage for OTG mode
     bool chargeWhenRigIsOn;
     bool enableThermistor;
     int8_t factoryRtcOffset;          // factory calibrated RTC offset in ppm (-127 to +127)
     int16_t userRtcOffset;            // user RTC offset in ppm, set via KX2 RTC ADJ menu (-278 to +273)
-    uint16_t dischargingVoltageLimit; // mV
 };
 
 extern struct SysConfig sysconfig;

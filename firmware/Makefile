@@ -49,7 +49,7 @@ CFLAGS_FSC_PD = -Wno-implicit-fallthrough -Wno-parentheses
 LDFLAGS = -mmcu=$(MCU) -Wl,--gc-sections -mrelax
 ifeq ($(DEBUG),1)
 # Include minimal printf; saves around 400 bytes. Only include when printf is actually
-# being used (i.e. debug), otherwise the printf will be linked even if it is never called.
+# being used (i.e. debug), otherwise the printf will be linked even if it is never called.
 LDFLAGS += -Wl,-u,vfprintf -lprintf_min
 endif
 

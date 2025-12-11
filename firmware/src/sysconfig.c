@@ -9,11 +9,11 @@ static EEMEM struct SysConfig sysconfig_eeprom = {
     .chargingVoltageLimit = 12600,
     .dcInputCurrentLimit = 3000,
     .otgCurrentLimit = 3000,
+    .dischargingVoltageLimit = 9000,
     .chargeWhenRigIsOn = false,
     .enableThermistor = false,
     .factoryRtcOffset = 0,
-    .userRtcOffset = 0,
-    .dischargingVoltageLimit = 9000
+    .userRtcOffset = 0
 };
 
 struct SysConfig sysconfig;
