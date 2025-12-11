@@ -65,15 +65,6 @@ void charger_sm_on_bq_interrupt(void);
 void charger_sm_on_pd_state_change(void);
 
 /**
- * @brief Notify state machine of KX2 rig power state change
- *
- * Called when rig is powered on/off (GPIO interrupt or polled).
- *
- * @param rig_on true if rig is powered on, false if powered off
- */
-void charger_sm_on_kx2_state_change(bool rig_on);
-
-/**
  * @brief Notify state machine of PPS voltage update from PD core
  *
  * Called when platform_set_pps_voltage() is invoked by PD policy engine.

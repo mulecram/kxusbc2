@@ -75,13 +75,6 @@ void charger_sm_on_pd_state_change(void) {
     debug_printf("SM: PD state change: %d, %d\n", fsc_pd_get_connection_state(), fsc_pd_get_policy_state());
 }
 
-void charger_sm_on_kx2_state_change(bool rig_on) {
-    // KX2 state will be detected by state machine checking kx2_is_on()
-    // No action needed here - state machine queries kx2 directly
-    (void)rig_on;
-    //debug_printf("SM: KX2 state change\n");
-}
-
 void charger_sm_on_pps_voltage_update(uint16_t mv) {
     // Skip if no change
     if (otg_voltage == mv) {

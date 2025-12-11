@@ -84,6 +84,7 @@ The following settings can be set in the EEPROM (see also the definitions in htt
 | 14 | Factory RTC offset (ppm) | `int8` | 0 | -127…127
 | 15 | User RTC offset (ppm, set in KX2 RTC ADJ menu) | `int16` | 0 | -278…+273
 
+Note that the AVR is a little endian platform, e.g. the value 3000 would be represented as 0xB80B in EEPROM.
 
 ## RTC emulation
 
@@ -99,6 +100,13 @@ The RTC emulation also features a temperature compensation. Once a minute, it me
 ## Input priority
 
 The charger uses either the external DC jack input (E pad), or USB, whichever is connected first. If both sources are connected when the charger starts up, it prefers the DC jack input. The charger keeps using the current source as long as it is available, even if another source becomes available. However, if the current source disconnects, the charger switches. For example, if you connect a DC supply while the charger is charging from USB, it will keep using USB. If you then disconnect USB, it will seamlessly switch over to the DC jack input.
+
+
+## Charge inhibit when rig is on
+
+By default, the firmware suspends charging while the KX2 is on, to avoid any possibility of QRM. This is especially convenient when operating with an external DC power supply at home. Charging resumes as soon as the rig is turned off. Discharging is always possible, even when the rig is on, as the operator can always decide whether or not to plug in a USB-C device to be charged.
+
+The setting can be changed in the EEPROM such that charging is always allowed, regardless of whether the KX2 is on or not.
 
 
 ## LED indications

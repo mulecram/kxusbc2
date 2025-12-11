@@ -73,7 +73,6 @@ int main(void) {
     }
     led_shutdown();
 
-    bool last_kx2_on_state = kx2_is_on();
     while (1) {
 #ifdef DEBUG_STATUS
         static uint16_t last_bq_status = 0;
@@ -88,13 +87,6 @@ int main(void) {
         // Process BQ interrupts and notify state machine
         if (bq_process_interrupts()) {
             charger_sm_on_bq_interrupt();
-        }
-
-        // Detect KX2 state changes and notify state machine
-        bool curr_kx2_state = kx2_is_on();
-        if (curr_kx2_state != last_kx2_on_state) {
-            charger_sm_on_kx2_state_change(curr_kx2_state);
-            last_kx2_on_state = curr_kx2_state;
         }
 
         // Run charger state machine - returns a timeout in ticks until the next required wakeup,
