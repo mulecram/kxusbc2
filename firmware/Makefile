@@ -26,7 +26,7 @@ DEPS = $(patsubst src/%.c,$(DEPDIR)/%.d,$(wildcard src/*.c)) \
 	$(patsubst src/fsc_pd/%.c,$(DEPDIR)/fsc_pd_%.d,$(wildcard src/fsc_pd/*.c))
 
 # Output files
-TARGET = main
+TARGET = kxusbc2
 ELF = $(OBJDIR)/$(TARGET).elf
 HEX = $(OBJDIR)/$(TARGET).hex
 EEP = $(OBJDIR)/$(TARGET).eep
