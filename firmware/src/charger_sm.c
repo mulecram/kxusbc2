@@ -110,13 +110,13 @@ void charger_sm_on_pps_voltage_update(uint16_t mv) {
         bq_set_acdrv(true, false);
         if (otg_current == 0) {
             // No current limit set yet - use configured default
-            otg_current = sysconfig.otgCurrentLimit;
+            otg_current = sysconfig->otgCurrentLimit;
             bq_set_otg_current_limit(otg_current);
         }
         uint16_t otg_voltage_eff = otg_voltage;
-        if (sysconfig.otgVoltageHeadroom <= 500) {
+        if (sysconfig->otgVoltageHeadroom <= 500) {
             // Limit headroom for safety
-            otg_voltage_eff += sysconfig.otgVoltageHeadroom;
+            otg_voltage_eff += sysconfig->otgVoltageHeadroom;
         }
         bq_enable_otg(otg_voltage_eff);
         set_state(CHARGER_DISCHARGING);
@@ -130,8 +130,8 @@ void charger_sm_on_pps_voltage_update(uint16_t mv) {
 }
 
 void charger_sm_on_pps_current_update(uint16_t ma) {
-    if (ma > sysconfig.otgCurrentLimit) {
-        ma = sysconfig.otgCurrentLimit;
+    if (ma > sysconfig->otgCurrentLimit) {
+        ma = sysconfig->otgCurrentLimit;
     }
 
     // Skip if no change
@@ -152,7 +152,7 @@ void charger_sm_on_pps_current_update(uint16_t ma) {
  * @return true if inhibited (transitioned to RIG_ON), false otherwise
  */
 static bool check_rig_inhibit(void) {
-    if (kx2_is_on() && !sysconfig.chargeWhenRigIsOn) {
+    if (kx2_is_on() && !sysconfig->chargeWhenRigIsOn) {
         set_state(CHARGER_RIG_ON);
         return true;
     }
@@ -242,10 +242,10 @@ static uint16_t handle_disconnected(void) {
 static void enter_dc_charging(void) {
     discharging_low_battery = false;  // Clear low battery flag when entering charging
     bq_set_acdrv(false, true);
-    bq_set_input_current_limit(sysconfig.dcInputCurrentLimit);
+    bq_set_input_current_limit(sysconfig->dcInputCurrentLimit);
     bq_enable_adc();
     
-    if (!kx2_is_on() || sysconfig.chargeWhenRigIsOn) {
+    if (!kx2_is_on() || sysconfig->chargeWhenRigIsOn) {
         bq_enable_charging();
     }
 }
@@ -419,11 +419,11 @@ static uint16_t handle_discharging(void) {
 
     // Monitor battery voltage during discharging
     uint16_t vbat = bq_measure_vbat();
-    if (vbat < sysconfig.dischargingVoltageLimit) {
+    if (vbat < sysconfig->dischargingVoltageLimit) {
         if (!discharging_low_battery) {
             discharging_low_battery = true;
             debug_printf("SM: Battery voltage too low for discharging: %u mV < %u mV\n", 
-                        vbat, sysconfig.dischargingVoltageLimit);
+                        vbat, sysconfig->dischargingVoltageLimit);
             bq_disable_otg();
             set_state(CHARGER_DISCHARGING_BLOCKED);
         }

@@ -16,16 +16,16 @@ FSC_U8 PD_Specification_Revision;
 static void fsc_pd_event_handler(FSC_U32 event, FSC_U8 portId, void *usr_ctx, void *app_ctx);
 
 void fsc_pd_init(void) {
-    PD_Specification_Revision = sysconfig.pdMode == PD_3_0 ? USBPDSPECREV3p0 : USBPDSPECREV2p0;
+    PD_Specification_Revision = sysconfig->pdMode == PD_3_0 ? USBPDSPECREV3p0 : USBPDSPECREV2p0;
     port.PortID = 0;
     core_initialize(&port, FUSB302_I2C_ADDR);
     core_enable_typec(&port, TRUE);
-    core_enable_pd(&port, sysconfig.pdMode != PD_OFF);
+    core_enable_pd(&port, sysconfig->pdMode != PD_OFF);
     DPM_Init(&dpm);
     DPM_AddPort(dpm, &port);
     port.dpm = dpm;
 
-    switch (sysconfig.role) {
+    switch (sysconfig->role) {
         case DRP:
             core_set_drp(&port);
             break;
@@ -45,7 +45,7 @@ void fsc_pd_init(void) {
 
     // Update source capabilities to reflect maximum configured OTG current
     // TODO: Disable PPS if PD 2.0 in use
-    uint16_t max_current = sysconfig.otgCurrentLimit / PDO_FIXED_CURRENT_STEP;
+    uint16_t max_current = sysconfig->otgCurrentLimit / PDO_FIXED_CURRENT_STEP;
     for (uint8_t i = 0; i < NUMBER_OF_SRC_PDOS_ENABLED; i++) {
         if (port.src_caps[i].FPDOSupply.MaxCurrent > max_current) {
             port.src_caps[i].FPDOSupply.MaxCurrent = max_current;

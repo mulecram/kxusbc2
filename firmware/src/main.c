@@ -38,14 +38,18 @@ ISR(BADISR_vect) {
 int main(void) {
     clock_init();
     watchdog_init();
-    sysconfig_read();
     debug_init();
-    kx2_init();
-    rtc_init();
-    button_init();
     twi_init();
     led_wakeup();
     led_init();
+    if (!sysconfig_valid()) {
+        debug_printf("Invalid EEPROM configuration\n");
+        led_set_blinking(true, false, false, 255, 5, 5, 4, 11);  // Red blinking, 4 x at 2 Hz with 1 second pause
+        while (1);
+    }
+    kx2_init();
+    rtc_init();
+    button_init();
 
     // Enable global interrupts (also used for serial debug output)
     sei();
@@ -53,12 +57,12 @@ int main(void) {
     debug_printf("Startup, reset flags %x\n", RSTCTRL.RSTFR);
     RSTCTRL.RSTFR = 0xFF; // Clear reset flags
     
-    if (!bq_init(sysconfig.chargingVoltageLimit, sysconfig.chargingCurrentLimit)) {
+    if (!bq_init(sysconfig->chargingVoltageLimit, sysconfig->chargingCurrentLimit)) {
         debug_printf("BQ init failed\n");
         led_set_blinking(true, false, false, 255, 5, 5, 3, 11);  // Red blinking, 3 x at 2 Hz with 1 second pause
         while (1);
     }
-    bq_set_thermistor(sysconfig.enableThermistor);
+    bq_set_thermistor(sysconfig->enableThermistor);
 
     fsc_pd_init();
     charger_sm_init();

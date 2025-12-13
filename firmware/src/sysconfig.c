@@ -1,8 +1,11 @@
 #include <avr/eeprom.h>
 
 #include "sysconfig.h"
+#include "debug.h"
 
+// Definition for default EEPROM config, goes in .eeprom section, resulting in .eep file when compiling
 static EEMEM struct SysConfig sysconfig_eeprom = {
+    .magic = SYSCONFIG_MAGIC,
     .role = DRP,
     .pdMode = PD_3_0,
     .chargingCurrentLimit = 3000,
@@ -13,16 +16,16 @@ static EEMEM struct SysConfig sysconfig_eeprom = {
     .otgVoltageHeadroom = 100,
     .chargeWhenRigIsOn = false,
     .enableThermistor = false,
-    .factoryRtcOffset = 0,
     .userRtcOffset = 0
 };
 
-struct SysConfig sysconfig;
+// Memory-mapped pointer to sysconfig in EEPROM
+struct SysConfig *sysconfig = (struct SysConfig*)MAPPED_EEPROM_START;
 
-void sysconfig_read(void) {
-    eeprom_read_block(&sysconfig, &sysconfig_eeprom, sizeof(sysconfig));
+bool sysconfig_valid(void) {
+    return sysconfig->magic == SYSCONFIG_MAGIC;
 }
 
-void sysconfig_write(void) {
-    eeprom_write_block(&sysconfig, &sysconfig_eeprom, sizeof(sysconfig));
+void sysconfig_update_word(void *addr, uint16_t value) {
+    eeprom_update_word(addr - MAPPED_EEPROM_START, value);
 }

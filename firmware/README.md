@@ -72,22 +72,34 @@ The following settings can be set in the EEPROM (see also the definitions in htt
 
 | Byte offset | Description | Type | Default | Range |
 |:------------|:------------|:-----|:--------|:------|
-| 0 | Role | Enum<ul><li>0: SRC</li><li>1: SNK</li><li>2: DRP</li><li>3: TRY_SRC</li><li>4: TRY_SNK</li></ul> | 2: DRP
-| 1 | PD mode | Enum<ul><li>0: Off</li><li>1: PD 2.0</li><li>2: PD 3.0</li></ul> | 2: PD 3.0
-| 2 | Charging current limit (mA, max. current into battery) | `uint16` | 3000 | 50…5000
-| 4 | Charging voltage limit (mV, termination voltage for CV phase) | `uint16` | 12600 | 10000…18800
-| 6 | DC input current limit (mA, from DC jack) | `uint16` | 3000 | 100…3300
-| 8 | OTG current limit (mA, output to USB) | `uint16` | 3000 | 120…3320
-| 10 | Discharging voltage limit (mV, minimum battery voltage for OTG mode) | `uint16` | 9000 |
-| 12 | OTG voltage headroom (mV, will be added to output voltage) | `uint16` | 100 | 0…500
-| 14 | Allow charging while rig is on | `bool` | 0
-| 15 | Enable thermistor | `bool` | 0
-| 16 | Factory RTC offset (ppm) | `int8` | 0 | -127…127
-| 17 | User RTC offset (ppm, set in KX2 RTC ADJ menu) | `int16` | 0 | -278…+273
+| 0 | Magic value (to detect erased EEPROM) | `uint16` | 0x4355
+| 2 | Role | Enum<ul><li>0: SRC</li><li>1: SNK</li><li>2: DRP</li><li>3: TRY_SRC</li><li>4: TRY_SNK</li></ul> | 2: DRP
+| 3 | PD mode | Enum<ul><li>0: Off</li><li>1: PD 2.0</li><li>2: PD 3.0</li></ul> | 2: PD 3.0
+| 4 | Charging current limit (mA, max. current into battery) | `uint16` | 3000 | 50…5000
+| 6 | Charging voltage limit (mV, termination voltage for CV phase) | `uint16` | 12600 | 10000…18800
+| 8 | DC input current limit (mA, from DC jack) | `uint16` | 3000 | 100…3300
+| 10 | OTG current limit (mA, output to USB) | `uint16` | 3000 | 120…3320
+| 12 | Discharging voltage limit (mV, minimum battery voltage for OTG mode) | `uint16` | 9000 |
+| 14 | OTG voltage headroom (mV, will be added to output voltage) | `uint16` | 100 | 0…500
+| 16 | Allow charging while rig is on | `bool` | 0
+| 17 | Enable thermistor | `bool` | 0
+| 18 | User RTC offset (ppm, set in KX2 RTC ADJ menu) | `int16` | 0 | -278…+273
 
-Note that the AVR is a little endian platform, e.g. the value 3000 would be represented as 0xB80B in EEPROM.
+**Note that the AVR is a little endian platform**, e.g. the value 3000 would be represented as 0xB80B in EEPROM.
 
 The OTG voltage headroom can be used to compensate for losses in the MOSFETs, PCB traces, cable etc.
+
+### User Row
+
+The MCU has a special EEPROM section called User Row, which is not erased in case of a Chip Erase command. This is different from the normal EEPROM, which is erased, unless the EESAVE fuse is programmed.
+
+The User Row is currently used to store a factory-calibrated RTC offset, so that it is not inadvertently erased.
+
+| Byte offset | Description | Type | Default | Range |
+|:------------|:------------|:-----|:--------|:------|
+| 0 | Magic value (to detect erased User Row) | `uint16` | 0x5255
+| 2 | Factory RTC offset (ppm) | `int8` | 0 | -127…127
+
 
 ## RTC emulation
 
@@ -123,7 +135,8 @@ The setting can be changed in the EEPROM such that charging is always allowed, r
 | Temperature too high/low | red | steady
 | Fault (over-voltage/current, short circuit etc.) | red | blinking 5 Hz
 | Fault (battery voltage too low in OTG mode) | red | blinking 2 Hz
-| Fault (initialisation) | red | 3 x blinking at 2 Hz, followed by 1 s pause
+| Fault (charger init) | red | 3 x blinking at 2 Hz, followed by 1 s pause
+| Fault (EEPROM) | red | 4 x blinking at 2 Hz, followed by 1 s pause
 | Rig on (charging inhibited) | magenta | steady
 | Discharging (OTG) | blue / cyan (*) | “breathing” speed depending on discharge current
 

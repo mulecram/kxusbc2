@@ -3,6 +3,8 @@
 #include <avr/eeprom.h>
 #include <stdbool.h>
 
+#define SYSCONFIG_MAGIC 0x4355
+
 enum Role {
     SRC = 0,
     SNK = 1,
@@ -18,6 +20,7 @@ enum PDMode {
 } __attribute__ ((__packed__));
 
 struct SysConfig {
+    uint16_t magic;                   // must be 0x4355 to indicate valid config
     enum Role role;
     enum PDMode pdMode;
     uint16_t chargingCurrentLimit;    // mA, range 50-5000
@@ -28,11 +31,10 @@ struct SysConfig {
     uint16_t otgVoltageHeadroom;      // mV, voltage to be added in OTG mode to compensate for drop
     bool chargeWhenRigIsOn;
     bool enableThermistor;
-    int8_t factoryRtcOffset;          // factory calibrated RTC offset in ppm (-127 to +127)
     int16_t userRtcOffset;            // user RTC offset in ppm, set via KX2 RTC ADJ menu (-278 to +273)
 };
 
-extern struct SysConfig sysconfig;
+extern struct SysConfig *sysconfig;
 
-void sysconfig_read(void);
-void sysconfig_write(void);
+bool sysconfig_valid(void);
+void sysconfig_update_word(void *addr, uint16_t value);
