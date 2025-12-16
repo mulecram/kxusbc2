@@ -153,10 +153,14 @@ static void bq_print_status(void) {
         pin = -pout;
         pout = temp;
     }
+    uint32_t eff = 0;
+    if (pin != 0 && pout != 0) {
+        eff = pout * 1000 / pin; // 0..1000
+    }
     debug_printf("BQ Status: %d\n", bq_get_charge_status());
     debug_printf("Vbus: %u mV, Ibus: %d mA, limit: %u mV / %u mA\n", vbus, ibus, bq_get_input_voltage_limit(), bq_get_input_current_limit());
     debug_printf("Vbat: %u mV, Ibat: %d mA\n", vbat, ibat);
-    debug_printf("Pin: %ld mW, Pout: %ld mW\n", pin, pout);
+    debug_printf("Pin: %ld mW, Pout: %ld mW, eff = %lu.%lu%%\n", pin, pout, eff / 10, eff % 10);
     debug_printf("BQ temperature: %d.%d C\n", bq_measure_temperature() / 2, (bq_measure_temperature() % 2) * 5);
     debug_printf("BQ thermistor: %u\n", bq_measure_thermistor());
 }
