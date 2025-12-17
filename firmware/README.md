@@ -161,6 +161,15 @@ The LED will “breathe” faster the higher the current into or from the batter
 If the battery voltage drops below the discharging voltage limit set in the EEPROM, discharging will stop, and the LED will blink red. Further attempts to discharge (by disconnecting and reconnecting a sink) will not initiate discharging again, even if the battery voltage has recovered a little in the meantime. The battery must first be recharged, at least for a short time, before discharging is allowed again.
 
 
+## Button functions
+
+At this time, the following functions are implemented:
+
+* Short press (< 1 second): attempt a PD role swap
+  * Can be used, for example, to charge the KX2 from a smartphone that can act as a source (e.g. iPhone)
+* Long press (> 1 second): system reset
+
+
 ## Connection states
 
 Enum values used by the FSC PD reference code, listed here for convenience to aid in debugging.
