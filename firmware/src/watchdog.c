@@ -4,11 +4,14 @@
 #include "watchdog.h"
 
 void watchdog_init(void) {
+#ifndef WATCHDOG_DISABLE
     // Enable watchdog with 8s timeout
     wdt_enable(0xB);
+#endif
 }
 
 void watchdog_tickle(void) {
+#ifndef WATCHDOG_DISABLE
     // Query BQ to make sure we can communicate with it via I2C
     if (!bq_test_connection()) {
         // Communication failure - do not reset watchdog, let system reset
@@ -21,4 +24,5 @@ void watchdog_tickle(void) {
     }
 
     wdt_reset();
+#endif
 }
