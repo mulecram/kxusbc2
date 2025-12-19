@@ -6,8 +6,10 @@ PORT = /dev/cu.usbserial-20120
 F_CPU = 20000000
 ifeq ($(DEBUG),1)
 OBJDIR = build/debug
+TARGET_SUFFIX = -debug
 else
 OBJDIR = build/release
+TARGET_SUFFIX = -release
 endif
 DEPDIR = $(OBJDIR)/.deps
 
@@ -26,7 +28,7 @@ DEPS = $(patsubst src/%.c,$(DEPDIR)/%.d,$(wildcard src/*.c)) \
 	$(patsubst src/fsc_pd/%.c,$(DEPDIR)/fsc_pd_%.d,$(wildcard src/fsc_pd/*.c))
 
 # Output files
-TARGET = kxusbc2
+TARGET = kxusbc2$(TARGET_SUFFIX)
 ELF = $(OBJDIR)/$(TARGET).elf
 HEX = $(OBJDIR)/$(TARGET).hex
 EEP = $(OBJDIR)/$(TARGET).eep
