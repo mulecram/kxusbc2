@@ -19,7 +19,7 @@ Prerequisites:
 7. `make eeprom` to write the default sysconfig settings to the EEPROM.
 8. `make fuses` to program the fuses.
 
-`DEBUG` should be set to 0 for release builds, otherwise standby consumption will increase (periodic debug status output, charger ADC active for measurements etc.).
+`DEBUG` should be set to 0 for release builds, otherwise standby consumption will increase (periodic debug status output, charger ADC active for measurements etc.). Also note that the PD protocol has quite strict timing requirements, and debug code/output can interfere with that and cause problems during PD negotiation, usually manifesting themselves as hard reset loops.
 
 ### Recommended fuse settings
 
@@ -65,6 +65,8 @@ The patch included in the repository, `fsc_pd.patch`, which is applied automatic
 The ATtiny3226 has a one-wire UPDI interface for programming and debugging. The KXUSBC2 board provides this on a 3-pin 2.54 mm header on the backside, along with Vcc (3.3 V) and GND. The header doesn't actually need to be soldered – the middle pad is slightly offset/staggered, so one can get a good-enough interference fit by simply sticking a pin header through the holes for a temporary connection to the debugger. Call it a poor man's (or hobbyist-friendly) Tag-Connect 😂 This can be used directly with a NanoUPDI or a UPDI Friend, thus providing a programming solution for less than $10.
 
 There is also a serial interface on a separate 3-pin header (also staggered), wired to the MCU's hardware USART, as UPDI does not support debug console output. Note that the levels there are 3.3 V, not RS-232.
+
+Aside from command line tools like AVRDUDE that can be used to program the firmware and EEPROM, there is also a web-based programmer at https://manuelkasper.github.io/kxusbc2/programmer/ that can flash firmware updates and allows UI-based configuration of the various settings.
 
 
 ## Configuration

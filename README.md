@@ -69,6 +69,11 @@ Installing the KXUSBC2 is quite simple, and similar to the procedure for the KXI
 Instead of using a replacement side panel, an oblong USB-C hole can also be drilled into the original side panel.
 
 
+## Firmware updates and configuration
+
+There is a web-based programmer at https://manuelkasper.github.io/kxusbc2/programmer/ that can flash firmware updates and allows UI-based configuration of the various settings (current limits etc.). All that is required is a simple UPDI adapter (essentially a USB-to-Serial TTL level adapter) and a browser that supports the Web Serial API.
+
+
 ## Development
 
 The schematic/PCB was designed with KiCad, and the firmware was written to be compiled with AVR-GCC. See the [hardware notes](hardware/README.md) and [firmware notes](firmware/README.md) for details.
@@ -76,9 +81,7 @@ The schematic/PCB was designed with KiCad, and the firmware was written to be co
 
 ## Current state of the project
 
-A first batch of PCBs has been produced and successfully tested by HB9DQM (2025-11-30). Some minor issues and potential improvements to the hardware have been found; see the issues page.
-
-The firmware is working, with PD 3.0 compatibility tested with various sources (AC adapters, power banks) and sinks (mobile phones, tablets). Remaining open tasks mainly center around ensuring reliability in case of unexpected events (I²C timeouts/errors, watchdog etc.), implementing config button and LED handling, and further reducing standby power consumption. See the issues page for details.
+The second revision of the PCB (rev2) is currently being tested by several beta testers around the world. The hardware and firmware are almost complete, with only minor issues remaining (see the issues page).
 
 
 ### Disclaimer
