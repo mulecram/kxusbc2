@@ -31,17 +31,20 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: 'programmer/package-lock.json'
 
       - name: Install dependencies
+        working-directory: ./programmer
         run: npm ci
 
       - name: Build project
+        working-directory: ./programmer
         run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist'
+          path: 'programmer/dist'
 
   deploy:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
