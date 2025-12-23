@@ -395,6 +395,9 @@ static uint16_t handle_rig_on(void) {
     if (!kx2_is_on()) {
         // Rig powered down - return to disconnected for clean restart
         set_state(CHARGER_DISCONNECTED);
+    } else if (!bq_get_ac1_present() && !bq_get_ac2_present()) {
+        // Input power disappeared while rig is on
+        set_state(CHARGER_DISCONNECTED);
     }
     return 0;
 }
