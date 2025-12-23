@@ -45,6 +45,7 @@ Before installing the KXUSBC2, ensure you have:
    - Turn on the KX2 and go into the settings menu.
    - Find the KXIBC2 option and set it to "nor".
    - This will enable the RTC and battery voltage display functions.
+   - If you can't find the KXIBC2 option in the menu, you need to update the KX2 firmware.
 
 ---
 
@@ -71,15 +72,14 @@ You can also charge from a 9-15 V supply connected to the KX2's external DC jack
    - Default charging current: 3 A (configurable)
    - Charging voltage: 12.6 V for 3S Li-Ion (configurable for other battery types)
    - The charger uses either USB-C or the DC jack input, whichever is connected first
-   - If both are connected at startup, DC jack takes priority
 
 3. **Charging while operating**
    - By default, charging is inhibited when the KX2 is powered on (to avoid any chance of QRM)
-   - This can be enabled in firmware configuration if desired
+   - This can be changed in firmware configuration if desired
 
-### Using OTG Mode (On-The-Go = Charging External Devices)
+### Using OTG (Source) Mode (On-The-Go = Charging External Devices)
 
-1. **Enable OTG mode**
+1. **Start OTG mode**
    - Connect a USB-C device (phone, tablet, GPS, etc.) to the port
    - The board will automatically detect and switch to source mode
 
@@ -111,7 +111,7 @@ The RGB LED provides visual feedback on the board's status:
 | Rig on (charging inhibited) | Magenta | Steady |
 | Discharging (OTG) | Blue/Cyan (*) | "Breathing" (speed indicates current) |
 
-*Yellow/Cyan indicates temperature in "warm" or "cool" region (reduced current)
+(*) Yellow/Cyan indicates temperature in "warm" or "cool" region (reduced current)
 
 **Breathing speed indicates charge/discharge current:**
 - < 500 mA: 8.5 s cycle
@@ -123,7 +123,7 @@ The RGB LED provides visual feedback on the board's status:
 
 The KX2 can display the battery voltage in the menu (like with KXIBC2):
 - Set the "KXIBC2" menu option to "NOR" in the KX2 configuration
-- The battery voltage will appear as "VBAT" in the KX2 menu (with KX2 Firmware 3.02 as "BT")
+- The battery voltage will appear as "BT" in the KX2 VFO B display
 
 ### Real-Time Clock (RTC)
 
@@ -132,9 +132,53 @@ The KXUSBC2 includes an RTC that works with the KX2's clock functions:
 - Calibrate using the KX2's "RTC ADJ" menu as usual
 - Maximum correction: ±127 ppm (about 11 seconds per day)
 
+### Config Button
+
+The KXUSBC2 has a small push button that can be accessed using a paper clip etc. through the side panel.
+
+#### Button Press Functions
+
+- **Short press** (< 1 second): Attempt a PD role swap
+  - Useful for charging from devices that can also act as a power source (e.g., recent iPhones)
+  
+- **Medium press** (1–3 seconds): Enter the config menu
+  - Only works when nothing is connected to the KXUSBC2 (LED is off)
+  
+- **Long press** (> 3 seconds): System reset
+  - Restarts the KXUSBC2
+
+#### Config Menu Navigation
+
+When you enter the config menu, the LED blinks yellow at 1-second intervals. The number of blinks indicates which menu item you're currently viewing.
+
+**Menu Navigation:**
+- **Short press**: Advance to the next menu item
+- **Medium press**: Enter the currently selected menu item (LED will blink blue to show the current setting)
+  - While viewing settings:
+    - **Short press** changes the setting
+    - **Medium press** exits the menu item
+- **Long press**: Exit the menu and restart with new settings
+
+#### Config Menu Items
+
+| Menu Item | Description | Available Values (blink counts) |
+|:----------|:------------|:-----------------|
+| 1 | Charging current limit | 500 mA (1), 1000 mA (2), 2000 mA (3), 3000 mA (4) |
+| 2 | DC input current limit | 500 mA (1), 1000 mA (2), 2000 mA (3), 3000 mA (4) |
+| 3 | Charge while rig is on | Disable (1), Enable (2) |
+| 4 | Thermistor | Disable (1), Enable (2) |
+
+**Example**: To enable charging while the rig is on:
+1. Press the button for 1–3 seconds (LED blinks yellow, indicating menu item 1)
+2. Press the button briefly two times to reach menu item 3 (LED will blink 3 times before cycling)
+3. Press the button for 1–3 seconds to enter menu item 3 (LED blinks blue once, indicating that the setting is currently disabled)
+4. Press the button briefly to toggle to "enable" (two blinks)
+5. Press the button for 1–3 seconds to exit the menu item
+6. Press the button for > 3 seconds to restart
+
 ### Configuration Options
 
-Advanced settings can be configured via EEPROM (requires UPDI programming tool):
+Advanced settings can be configured via EEPROM. The web-based programmer at https://manuelkasper.github.io/kxusbc2/programmer can be used to easily change the settings without installing any software (requires a simple serial UPDI programming adapter).
 
 - **Role**: SRC, SNK, DRP (default), TRY_SRC, TRY_SNK
 - **PD mode**: Off, PD 2.0, PD 3.0 (default)
