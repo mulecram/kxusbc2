@@ -11,8 +11,6 @@ I prefer fully integrated things that are simple and foolproof to use. So I set 
 <img src="/hardware/photos/pcb_top.jpg" alt="PCB top" width="500">
 <img src="/hardware/photos/pcb_bottom.jpg" alt="PCB bottom" width="500">
 
-The top side was assembled at the PCB factory, except for the receptacles and the metal standoffs. The bottom side was hand-soldered, as you can tell 😇
-
 Here is how it looks installed in a KX2, with a custom CNC-machined aluminum side plate for the USB-C port opening:
 
 <img src="/hardware/photos/side_panel.jpg" alt="KX2 replacement side panel with USB-C port" width="500">
@@ -32,7 +30,7 @@ Here is how it looks installed in a KX2, with a custom CNC-machined aluminum sid
 * Real-Time Clock (RTC)
 * RGB status LED and config button
 * Battery temperature monitoring (with thermistor, optional)
-* Battery voltage monitor in KX2 menu (VBAT, like KXIBC2)
+* Battery voltage monitor in KX2 menu (like KXIBC2)
 
 
 ## Tech details
@@ -44,7 +42,7 @@ Here is how it looks installed in a KX2, with a custom CNC-machined aluminum sid
 * ATtiny3226 microcontroller
   * Implements the PD protocol stack in firmware
   * Current/voltage limits etc. configurable in EEPROM
-  * Config button for basic settings (TBD), trigger a PD role swap, reset, etc.
+  * Config button for basic settings, trigger a PD role swap, reset
   * UPDI debug/programming header
   * Serial debug console header
 * RTC emulated in MCU (SPI client), backed by crystal, with temperature compensation
@@ -58,20 +56,12 @@ For more information and a PDF schematic, see the [hardware notes](hardware/READ
 
 ## Installation
 
-Installing the KXUSBC2 is quite simple, and similar to the procedure for the KXIBC2.
-
-* Open the back of the KX2.
-* Remove the original left side panel (4 screws).
-* Plug the KXUSBC2 into the slot reserved for the KXIBC2/KXIO2.
-* Solder two wires from the E and B pads on the KX2 RF PCB to the KXUSBC2 (same procedure as for installing an official KXIBC2, see [manual](https://ftp.elecraft.com/KX2/Manuals%20Downloads/E740370-B5,%20KXIBC2%20manual.pdf)). If you have a KX2 with a factory installed KXIBC2, there should already be two pin sockets in place that you can simply plug into, no soldering required.
-* Install the replacement left side panel (4 screws).
-
-Instead of using a replacement side panel, an oblong USB-C hole can also be drilled into the original side panel.
+Installing the KXUSBC2 is quite simple, and similar to the procedure for the KXIBC2. See the [User Guide](USER_GUIDE.md) for details.
 
 
 ## Firmware updates and configuration
 
-There is a web-based programmer at https://manuelkasper.github.io/kxusbc2/programmer/ that can flash firmware updates and allows UI-based configuration of the various settings (current limits etc.). All that is required is a simple UPDI adapter (essentially a USB-to-Serial TTL level adapter) and a browser that supports the Web Serial API.
+There is a web-based programmer at https://manuelkasper.github.io/kxusbc2/programmer/ that can flash firmware updates and allows easy UI-based configuration of the various settings (current limits etc.). All that is required is a simple UPDI adapter (essentially a USB-to-Serial TTL level adapter) and a browser that supports the Web Serial API.
 
 
 ## Development

@@ -9,9 +9,48 @@ Before installing the KXUSBC2, ensure you have:
 - An Elecraft KX2 transceiver
 - A 3S (12.6 V) internal Li-Ion battery (or 4S LiFePO₄ with firmware configuration)
 - Basic soldering skills and equipment
-- A replacement left side panel with USB-C opening
-- Two wires (22-24 AWG) for power connections
-- Optional: Mill-Max receptacle pins (8827-0-15-15-16-27-04-0) and mating pins (3132-0-00-15-00-00-08-0) if your KX2 doesn't already have a factory-installed KXIBC2
+- A replacement left side aluminum panel with USB-C opening
+- Thermal pad (10 x 6 mm, 4 mm height)
+- Heat shrink tube (2 pcs., 2.5 x 15 mm)
+- If your KX2 doesn't already have a factory-installed KXIBC2:
+  - Receptacle pins (Mill-Max 8827-0-15-15-16-27-04-0) <img src="/hardware/photos/8827-0-15-15-16-27-04-0.jpg" alt="Receptacle pin" width="60" style="vertical-align: middle">
+- If the wires are not already installed on your KXUSBC2:
+  - White/red silicone wires (22 AWG)
+  - Mating pins (Mill-Max 3132-0-00-15-00-00-08-0) <img src="/hardware/photos/3132-0-00-15-00-00-08-0.jpg" alt="Mating pin" width="60" style="vertical-align: middle">
+
+### Preparing the KXUSBC2
+
+If the wires on your KXUSBC2 aren't already installed, then you need to do the following:
+
+1. Cut ~50 mm pieces of white and red silicone wire.
+2. Strip 3 mm of the insulation on one end of each wire.
+3. Solder gold mating pins (those with the wider shoulder) to both wires.
+4. Trim the wires such that the total length from the tip of the gold pin is as follows:
+   * E (white): 31 mm
+   * B (red): 43 mm
+5. Strip 3 mm of the insulation from the open ends of the wires.
+6. Solder the wires to the KXUSBC2 PCB. The wires enter the PCB on the bottom side and are soldered on the top side.
+7. Trim the excess wires close to the board, to prevent shorts against the side panel.
+
+<img src="/hardware/photos/pcb_wires.jpg" alt="PCB with wires" width="500">
+
+### Preparing the KX2
+
+If you already have a KXIBC2 that was installed using the method used at the Elecraft factory (with pins/sockets), then you can skip this section and simply remove the KXIBC2.
+
+Otherwise, perform the following step (see also the [KXIBC2 installation guide](https://ftp.elecraft.com/KX2/Manuals%20Downloads/E740370-B5,%20KXIBC2%20manual.pdf), as the procedure is the same):
+
+1. Solder the long, slim gold pin receptacles (Mill-Max 8827-0-15-15-16-27-04-0) to the E and B pads of the KX2 RF PCB. The E pad may be filled with solder, making this a bit difficult. Pre-heating with hot air and then using solder wick helps. One can remove the RF PCB in order to solder the pins properly on the bottom, but it can also be done in place on the top side.
+
+<img src="/hardware/photos/kx2_rf_pcb/rf_pcb_jacks.jpg" alt="Receptacles on KX2 RF PCB" width="500">
+
+### Preparing the side panel
+
+Inspect your replacement side panel. The back side should have the black coating removed and bare metal exposed on those parts that make contact with metal parts of the KX2’s chassis – like on the original side panel. If not, then you will need to do that yourself to ensure proper grounding. A Dremel or similar power tool works best (use eye protection!). Hand sanding with sand paper can be tedious.
+
+Make sure to also remove the coating around the screw holes near the bottom edge, as the standoffs on the KXUSBC2 board make electrical contact there for grounding.
+
+[add photo of side panel back with coating removed]
 
 ### Hardware Installation
 
@@ -28,22 +67,21 @@ Before installing the KXUSBC2, ensure you have:
    - Ensure the board is properly seated.
 
 4. **Connect power wires**
-   - If your KX2 has a factory-installed KXIBC2, you can use the existing pin sockets (no soldering required)
-   - Otherwise, solder two wires from the KX2 RF PCB to the KXUSBC2:
-     - Connect the **E pad** on the KX2 RF PCB to the KXUSBC2 (external DC jack connection)
-     - Connect the **B pad** on the KX2 RF PCB to the KXUSBC2 (battery connection)
-     Trim the wires on the bottom of the board very close to the board after soldering, to prevent them from shorting against the side panel once installed.
-   - Recommended wire lengths: E pad 28 mm, B pad 40 mm
-   - Refer to the [KXIBC2 manual](https://ftp.elecraft.com/KX2/Manuals%20Downloads/E740370-B5,%20KXIBC2%20manual.pdf) for detailed soldering instructions
+   - Slip heat shrink tubing onto the white and red wires from the KXUSBC2.
+   - Plug the wires into the receptacles on the KX2 RF PCB (E = white, B = red).
+   - Slide the heat shrink tubing over the pins to prevent short-circuits (no need to heat shrink the tubing and can in fact make it hard to remove if desired).
 
-5. **Install the replacement side panel**
-   - Using sanding paper or a Dremel tool, strip the coating on the back of the replacement side panel in the areas where the side panel contacts raw metal parts of the KX2 chassis. Look at the original side panel for reference. Also remove the coating around the holes for the screws that go into the KXUSBC2, so that the metal standoffs on the KXUSBC2 make direct contact with the side panel for optimal grounding.
-   - Mount the replacement left side panel with USB-C port opening (4 screws).
-   - Ensure the USB-C connector aligns properly with the opening.
+5. **Place thermal pad**
+   - Place the thermal pad over U1 as shown in the photo, such that it doesn't collide with the protrusion on the KX2's back cover.
+     
+     <img src="/hardware/photos/thermal_pad.jpg" alt="Thermal pad placement" width="500">
 
-6. **Enable KXIBC2 option in KX2 menu**
+6. **Install the replacement side panel**
+   - Make sure to use the right screws for the right holes, or you will damage the thread.
+
+7. **Enable KXIBC2 option in KX2 menu**
    - Turn on the KX2 and go into the settings menu.
-   - Find the KXIBC2 option and set it to "nor".
+   - Find the KXIBC2 option and set it to "NOR".
    - This will enable the RTC and battery voltage display functions.
    - If you can't find the KXIBC2 option in the menu, you need to update the KX2 firmware.
 
@@ -61,37 +99,38 @@ You can also charge from a 9-15 V supply connected to the KX2's external DC jack
 
 ### Charging the KX2 Battery
 
-1. **Connect a USB-C power source**
-   - Use any USB-C charger, power bank, or computer USB port
-   - Supports USB PD 3.0, QC, and BC1.2 protocols
-   - Maximum charging power: 30 W
+#### Connect a power source
+- Use any USB-C charger, power bank, or computer USB port
+- Supports USB PD 3.0, QC, and BC1.2 protocols
+- You can also connect a DC power supply (9-15 V) to the KX2's DC jack
+- Maximum charging power: 30 W
 
-2. **Charging behavior**
-   - The board automatically negotiates the best available voltage/current profile
-   - Delay of 3 seconds for non-PD capable sources before charging begins
-   - Default charging current: 3 A (configurable)
-   - Charging voltage: 12.6 V for 3S Li-Ion (configurable for other battery types)
-   - The charger uses either USB-C or the DC jack input, whichever is connected first
+#### Charging behavior
+- The board automatically negotiates the best available voltage/current profile
+- Delay of 3 seconds for non-PD capable sources before charging begins
+- Default charging current: 3 A (configurable)
+- Charging voltage: 12.6 V for 3S Li-Ion (configurable for other battery types)
+- The charger uses either USB-C or the DC jack input, whichever is connected first
 
-3. **Charging while operating**
-   - By default, charging is inhibited when the KX2 is powered on (to avoid any chance of QRM)
-   - This can be changed in firmware configuration if desired
+#### Charging while operating
+- By default, charging is inhibited when the KX2 is powered on (to avoid any chance of QRM)
+- This can be changed in firmware configuration if desired
 
-### Using OTG (Source) Mode (On-The-Go = Charging External Devices)
+### Using OTG/Source Mode (On-The-Go = Charging External Devices)
 
-1. **Start OTG mode**
-   - Connect a USB-C device (phone, tablet, GPS, etc.) to the port
-   - The board will automatically detect and switch to source mode
+#### Starting OTG mode
+- Connect a USB-C sink (phone, tablet, GPS, etc.) to the port
+- The board will automatically detect and switch to source mode
 
-2. **Power output**
-   - Maximum output: 30 W (5-15 V)
-   - Default current limit: 3 A (configurable)
-   - Minimum battery voltage: 9.0 V (configurable, prevents over-discharge)
+#### Power output
+- Maximum output: 30 W (5-15 V)
+- Default current limit: 3 A (configurable)
+- Minimum battery voltage: 9.0 V (configurable, prevents over-discharge)
 
-3. **Low battery protection**
-   - If battery voltage drops below the limit, discharging stops
-   - LED will blink red (2 Hz)
-   - Recharge the battery before OTG mode will work again
+#### Low battery protection
+- If battery voltage drops below the limit, discharging stops
+- LED will blink red (2 Hz)
+- Recharge the battery before OTG mode will work again
 
 ### LED Status Indicators
 
