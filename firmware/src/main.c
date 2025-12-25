@@ -78,12 +78,6 @@ int main(void) {
     led_shutdown();
 
     while (1) {
-#ifdef DEBUG_STATUS
-        static uint16_t last_bq_status = 0;
-        // Re-enable in case state machine disabled it
-        bq_enable_adc();
-#endif
-
         if (button_handle_config_menu()) {
             // In config menu - skip normal processing
             watchdog_tickle();
@@ -126,7 +120,14 @@ int main(void) {
             sei();
         }
 
+        // Tickle the watchdog. Note that we get at least one interrupt per second due to the RTC PIT.
+        // If the latter is disabled, one must make sure to set the RTC alarm at less than the watchdog timeout interval.
+        watchdog_tickle();
+
 #ifdef DEBUG_STATUS
+        static uint16_t last_bq_status = 0;
+        // Re-enable in case state machine disabled it
+        bq_enable_adc();
         uint16_t now = rtc_get_ticks();
         if ((now - last_bq_status) >= 1000) {
             bq_print_status();
@@ -134,10 +135,6 @@ int main(void) {
             last_bq_status = now;
         }
 #endif
-
-        // Tickle the watchdog. Note that we get at least one interrupt per second due to the RTC PIT.
-        // If the latter is disabled, one must make sure to set the RTC alarm at less than the watchdog timeout interval.
-        watchdog_tickle();
     }
 
     return 0;
